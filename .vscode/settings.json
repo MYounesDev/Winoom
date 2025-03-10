@@ -1,0 +1,16 @@
+{
+    "sqltools.connections": [
+        {
+            "pgOptions": {
+                "ssl": {
+                    "rejectUnauthorized": true
+                }
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "driver": "PostgreSQL",
+            "name": "StudyMaster",
+            "connectString": "postgresql://NeoClassDB_owner:npg_y8Gbeq5DVNvL@ep-dry-frog-a9491kzd-pooler.gwc.azure.neon.tech/NeoClassDB?sslmode=require"
+        }
+    ]
+}
