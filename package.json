@@ -1,0 +1,22 @@
+{
+  "name": "Winoom",
+  "version": "1.0.0",
+  "description": "A course management platform enabling students, teachers, and admins to track classes, assignments, exams, and grades",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "pg": "^8.14.0",
+    "react-router-dom": "^7.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
