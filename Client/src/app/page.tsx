@@ -1,28 +1,22 @@
 "use client"
-import React, { useState } from "react";
-import axios from "axios";
-import Sidebar from '../components/Sidebar';
+
+import StyledButtons from "./StyledButtons";
+
 
 function App() {
-  const [message, setMessage] = useState("");
-  const [inputData, setInputData] = useState(""); // Track input data
 
-  const handleSendData = () => {
-    // Send POST request to the server
-    axios.post("http://localhost:5000/api/sendData", { data: inputData })
-      .then((response) => {
-        setMessage(response.data.message); // Set success message from server
-      })
-      .catch((error) => {
-        console.error("Error sending data:", error);
-        setMessage("Error sending data.");
-      });
-  };
+
 
   return (
-    
-    <div style={{ display: 'flex' }}>
-      <Sidebar/>
+    <div> 
+      <StyledButtons/>
+    </div>
+  );
+}
+
+export default App;
+ /*
+       <Sidebar/>
       
       
       <div>
@@ -42,8 +36,5 @@ function App() {
       
 
       </div>
-    </div>
-  );
-}
-
-export default App;
+ 
+ */

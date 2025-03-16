@@ -15,6 +15,8 @@ const Sidebar = () => {
     console.log("Navigating to home page");
   };
 
+
+
   return (
     <div className={`sidebar-container ${isOpen ? 'open' : 'closed'}`}>
       <div className="sidebar-toggle">
@@ -39,27 +41,16 @@ const Sidebar = () => {
               <span>Home</span>
               <div className="glow-effect"></div>
             </li>
-            <li className="nav-item">
-              <Presentation size={20} />
-              <span>Class</span>
-              <div className="glow-effect"></div>
-            </li>
-            <li className="nav-item">
-              <NotebookPen size={20} />
-              <span>Homework</span>
-              <div className="glow-effect"></div>
-            </li>
 
-            <li className="nav-item">
-              <University size={20} />
-              <span>Lessons</span>
-              <div className="glow-effect"></div>
-            </li>
-            <li className="nav-item">
-              <BookCopy size={20} />
-              <span>Books</span>
-              <div className="glow-effect"></div>
-            </li>
+
+
+          {/*navItems*/}
+
+
+
+
+
+
             <li className="nav-item">
               <Calendar size={20} />
               <span>Calendar</span>
