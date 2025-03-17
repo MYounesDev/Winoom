@@ -1,36 +1,48 @@
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import Home from "./Home"
+import Home from "@/app/Home";
 import React, { useState } from "react";
 import axios from "axios";
 
+// Import all page components
+import Settings from '@/pages/Settings';
+import Calendar from '@/pages/Calendar';
+import Class from '@/pages/Class';
+import Homework from '@/pages/Homework';
+import Lessons from '@/pages/Lessons';
+import Books from '@/pages/Books';
+import Classes from '@/pages/Classes';
+import Students from '@/pages/Students';
+import Notes from '@/pages/Notes';
+import Reports from '@/pages/Reports';
 
-
+// Define a type for the user role
+type UserRole = 'Student' | 'Teacher' | 'Advisor' | null;
 
 // Create a wrapper component that uses hooks inside Router context
 const ButtonsWithNavigation = () => {
   const [message, setMessage] = useState("");
-
+  const [selectedRole, setSelectedRole] = useState<UserRole>(null);
   const navigate = useNavigate();
 
   // Function to handle button click with proper typing
-  const handleButtonClick = async (requestType: String) => {
-
+  const handleButtonClick = async (requestType: UserRole) => {
     try {
-    // Send POST request to the server
-    axios.post("http://localhost:5000/api/sendData", { data: requestType })
-    .then((response) => {
-      setMessage(response.data.message); // Set success message from server
-      console.log(response.data.message)
-    })
-    .catch((error) => {
-      console.error("Error sending data:", error);
-      setMessage("Error sending data.");
-    });
+      // Set the selected role
+      setSelectedRole(requestType);
+      
+      // Send POST request to the server
+      await axios.post("http://localhost:5000/api/sendData", { data: requestType })
+        .then((response) => {
+          setMessage(response.data.message); // Set success message from server
+          console.log(response.data.message);
+        })
+        .catch((error) => {
+          console.error("Error sending data:", error);
+          setMessage("Error sending data.");
+        });
 
-
-
-      // Navigate to the Home page after API request
-      navigate('/Home');
+      // Navigate to the Home page after API request and pass the selected role
+      navigate('/home', { state: { role: requestType } });
     } catch (error) {
       console.error(`Error with ${requestType} request:`, error);
     }
@@ -86,8 +98,23 @@ const StyledButtons = () => {
     <Router>
       <Routes>
         <Route path="/" element={<ButtonsWithNavigation />} />
-        <Route path="/Home" element={<Home />} />
-      </Routes>
+        <Route path="/home" element={<Home />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/calendar" element={<Calendar />} />
+        
+        {/* Student Routes */}
+        <Route path="/class" element={<Class />} />
+        <Route path="/homework" element={<Homework />} />
+        <Route path="/lessons" element={<Lessons />} />
+        <Route path="/books" element={<Books />} />
+        
+        {/* Teacher/Advisor Routes */}
+        <Route path="/classes" element={<Classes />} />
+        <Route path="/students" element={<Students />} />
+        <Route path="/notes" element={<Notes />} />
+        <Route path="/reports" element={<Reports />} />
+    {/*    <Route path="/teachers" element={<Teachers />} />*/}
+        </Routes>
     </Router>
   );
 };
