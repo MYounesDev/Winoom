@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Home from "@/app/Home";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 // Import all page components
@@ -18,17 +18,27 @@ import Reports from '@/pages/Reports';
 // Define a type for the user role
 type UserRole = 'Student' | 'Teacher' | 'Advisor' | null;
 
-// Create a wrapper component that uses hooks inside Router context
 const ButtonsWithNavigation = () => {
   const [message, setMessage] = useState("");
   const [selectedRole, setSelectedRole] = useState<UserRole>(null);
   const navigate = useNavigate();
 
+  // Check for existing role on mount
+  useEffect(() => {
+    const storedRole = sessionStorage.getItem('userRole') as UserRole;
+    if (storedRole) {
+      setSelectedRole(storedRole);
+    }
+  }, []);
+
   // Function to handle button click with proper typing
-  const handleButtonClick = async (requestType: UserRole) => {
+  const handleButtonClick = async (requestType: any) => {
     try {
       // Set the selected role
       setSelectedRole(requestType);
+      
+      // Store in sessionStorage immediately
+      sessionStorage.setItem('userRole', requestType);
       
       // Send POST request to the server
       await axios.post("http://localhost:5000/api/sendData", { data: requestType })

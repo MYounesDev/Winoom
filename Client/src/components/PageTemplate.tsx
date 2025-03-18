@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from '@/components/Sidebar';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // Define a type for the user role
 type UserRole = 'Student' | 'Teacher' | 'Advisor' | null;
@@ -17,15 +17,28 @@ interface PageTemplateProps {
 
 const PageTemplate: React.FC<PageTemplateProps> = ({ title, children }) => {
   const location = useLocation();
-  const state = location.state as LocationState;
-  const userRole = state?.role || sessionStorage.getItem('userRole') as UserRole || null;
+  const navigate = useNavigate();
+  const [userRole, setUserRole] = useState<UserRole>(null);
   
-  // Store the user role in session storage so it persists across pages
-  React.useEffect(() => {
+  useEffect(() => {
+    // Try to get role from location state first
+    const state = location.state as LocationState;
+    
     if (state?.role) {
+      setUserRole(state.role);
       sessionStorage.setItem('userRole', state.role);
+    } else {
+      // Fall back to sessionStorage if no state
+      const storedRole = sessionStorage.getItem('userRole') as UserRole;
+      
+      if (storedRole) {
+        setUserRole(storedRole);
+      } else {
+        // If no role found anywhere, redirect to home page
+        navigate('/', { replace: true });
+      }
     }
-  }, [state]);
+  }, [location, navigate]);
 
   return (
     <div style={{ display: "flex" }}>
