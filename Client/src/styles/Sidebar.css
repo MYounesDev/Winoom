@@ -86,13 +86,14 @@
   box-shadow: 0 0 15px var(--glow-color);
 }
 
+/* Make sure logo container has position relative for proper eye positioning */
 .logo-container {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px 0;
   cursor: pointer;
-  position: relative;
 }
 
 .app-name {
@@ -104,6 +105,42 @@
   text-align: center;
   margin: 0 10px;
   white-space: nowrap;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+
+
+.eye-container {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 46px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.eye {
+  position: relative;
+  font-size: 30px;
+  font-weight: bold;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.pupil {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background-color: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease-out;
+  box-shadow: 0 0 5px var(--primary-color);
 }
 
 .pulsing-light {
@@ -180,6 +217,11 @@
   opacity: 0;
   width: 0;
 }
+
+.sidebar.closed .eye-container {
+  display: none;
+}
+
 
 .glow-effect {
   position: absolute;
