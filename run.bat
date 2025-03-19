@@ -1,1 +1,0 @@
-cd server && start npm start dev && cd .. && cd client && npm run dev   

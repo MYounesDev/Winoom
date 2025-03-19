@@ -1,4 +1,3 @@
-
 const express = require("express");
 const cors = require("cors");
 
@@ -20,92 +19,25 @@ app.post("/api/sendData", (req, res) => {
   const { data } = req.body; // Get data sent from the client
   console.log("Data received:", data); // For debugging
 
+  let responseMessage = "";
+  
   switch (data) {
     case "Student":
-      navItems = (
-        <>
-          <li className="nav-item">
-            <Presentation size={20} />
-            <span>Class</span>
-            <div className="glow-effect"></div>
-          </li>
-
-          <li className="nav-item">
-            <SquareCheckBig size={20} />
-            <span>Homework</span>
-            <div className="glow-effect"></div>
-          </li>
-
-          <li className="nav-item">
-            <University size={20} />
-            <span>Lessons</span>
-            <div className="glow-effect"></div>
-          </li>
-
-          <li className="nav-item">
-            <BookCopy size={20} />
-            <span>Books</span>
-            <div className="glow-effect"></div>
-          </li>
-        </>
-      );
-    case "Teacer":
-      navItems = (
-        <>
-          <li className="nav-item">
-            <Presentation size={20} />
-            <span>Classes</span>
-            <div className="glow-effect"></div>
-          </li>
-          <li className="nav-item">
-            <Baby size={20} />
-            <span>Students</span>
-            <div className="glow-effect"></div>
-          </li>
-          <li className="nav-item">
-            <NotebookPen size={20} />
-            <span>Nots</span>
-            <div className="glow-effect"></div>
-          </li>
-          <li className="nav-item">
-            <ChartColumnDecreasing size={20} />
-            <span>Reports</span>
-            <div className="glow-effect"></div>
-          </li>
-        </>
-      );
+      responseMessage = "Student dashboard loaded successfully!";
+      break;
+    case "Teacher":
+      responseMessage = "Teacher dashboard loaded successfully!";
+      break;
+    case "Advisor":
+      responseMessage = "Advisor dashboard loaded successfully!";
+      break;
     default:
-      navItems = (<>
-        <li className="nav-item">
-          <Presentation size={20} />
-          <span>Classes</span>
-          <div className="glow-effect"></div>
-        </li>
-        <li className="nav-item">
-          <Users size={20} />
-          <span>Teachers</span>
-          <div className="glow-effect"></div>
-        </li>
-        <li className="nav-item">
-          <Baby size={20} />
-          <span>Students</span>
-          <div className="glow-effect"></div>
-        </li>
-        <li className="nav-item">
-          <NotebookPen size={20} />
-          <span>Nots</span>
-          <div className="glow-effect"></div>
-        </li>
-        <li className="nav-item">
-          <ChartColumnDecreasing size={20} />
-          <span>Reports</span>
-          <div className="glow-effect"></div>
-        </li>
-      </>);
+      responseMessage = "Data received successfully!";
   }
+
   // Respond with a success message
   res.json({
-    message: "Data received successfully!" + data + data,
+    message: responseMessage,
     receivedData: data,
   });
 });
@@ -114,5 +46,3 @@ app.post("/api/sendData", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
-/*< /> */
