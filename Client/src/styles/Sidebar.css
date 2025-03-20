@@ -30,11 +30,11 @@
 }
 
 .sidebar-container.open {
-  width: 220px;
+  width: 240px;
 }
 
 .sidebar-container.closed {
-  width: 60px;
+  width: 80px;
 }
 
 .sidebar {
@@ -138,6 +138,7 @@
   height: 6px;
   background-color: white;
   border-radius: 50%;
+  border: 1px solid #ff7800;
   transform: translate(-50%, -50%);
   transition: transform 0.1s ease-out;
   box-shadow: 0 0 5px var(--primary-color);
