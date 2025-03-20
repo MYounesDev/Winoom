@@ -29,6 +29,7 @@ const Sidebar = ({ userRole: propUserRole }: SidebarProps) => {
   const [userRole, setUserRole] = useState<UserRole>(propUserRole || null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const logoRef = useRef<HTMLDivElement>(null);
+  const eyeContainerRefs = useRef<Array<HTMLSpanElement | null>>([null, null]);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -51,13 +52,10 @@ const Sidebar = ({ userRole: propUserRole }: SidebarProps) => {
   // Effect to handle mouse movement for eye tracking
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (logoRef.current) {
-        const logoRect = logoRef.current.getBoundingClientRect();
-        setMousePosition({
-          x: e.clientX,
-          y: e.clientY,
-        });
-      }
+      setMousePosition({
+        x: e.clientX,
+        y: e.clientY,
+      });
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -77,27 +75,28 @@ const Sidebar = ({ userRole: propUserRole }: SidebarProps) => {
 
   // Calculate eye positions based on mouse position
   const calculateEyeStyle = (eyeIndex: number) => {
-    if (!logoRef.current) return {};
-
-    const logoRect = logoRef.current.getBoundingClientRect();
-
-    // Position of the eye relative to the logo
-    const eyeOffset = eyeIndex === 1 ? 48 : 68; // Adjust based on the "o" positions
-    const eyeX = logoRect.left + eyeOffset;
-    const eyeY = logoRect.top + logoRect.height / 2;
-
-    // Calculate the angle between the eye and mouse
-    const angle = Math.atan2(mousePosition.y - eyeY, mousePosition.x - eyeX);
-
-    // Maximum movement radius for the pupil
-    const maxRadius = 2;
-
-    // Calculate the new position of the pupil
-    const pupilX = Math.cos(angle) * maxRadius;
-    const pupilY = Math.sin(angle) * maxRadius;
-
+    if (!eyeContainerRefs.current[eyeIndex]) return { transform: 'translate(-50%, -50%)' };
+    
+    const eyeRect = eyeContainerRefs.current[eyeIndex]!.getBoundingClientRect();
+    const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+    const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+    
+    // Calculate the angle between mouse and eye center
+    const radian = Math.atan2(mousePosition.y - eyeCenterY, mousePosition.x - eyeCenterX);
+    
+    // Determine the distance for pupil movement (limited by eye size)
+    const maxDistance = (eyeRect.width / 2) * 0.5; // Limit movement to 50% of eye radius
+    const distance = Math.min(
+      Math.sqrt(Math.pow(mousePosition.x - eyeCenterX, 2) + Math.pow(mousePosition.y - eyeCenterY, 2)),
+      maxDistance
+    )/2;
+    
+    // Calculate pupil position
+    const offsetX = Math.cos(radian) * distance;
+    const offsetY = Math.sin(radian) * distance;
+    
     return {
-      transform: `translate(${pupilX}px, ${pupilY}px)`,
+      transform: `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`
     };
   };
 
@@ -221,6 +220,28 @@ const Sidebar = ({ userRole: propUserRole }: SidebarProps) => {
     }
   };
 
+  // Render the actual logo with following eyes
+  const renderLogo = () => (
+    <h1 className="app-name">
+      Win
+      <span 
+        className="eye-container" 
+        ref={(el) => { eyeContainerRefs.current[0] = el; }}
+      >
+        <span className="eye">o</span>
+        <span className="pupil" style={calculateEyeStyle(0)}></span>
+      </span>
+      <span 
+        className="eye-container"
+        ref={(el) => { eyeContainerRefs.current[1] = el; }}
+      >
+        <span className="eye">o</span>
+        <span className="pupil" style={calculateEyeStyle(1)}></span>
+      </span>
+      m
+    </h1>
+  );
+
   switch (userRole) {
     case "Student":
       return (
@@ -238,18 +259,7 @@ const Sidebar = ({ userRole: propUserRole }: SidebarProps) => {
               ref={logoRef}
             >
               <div className="pulsing-light"></div>
-              <h1 className="app-name">
-                Win
-                <span className="eye-container">
-                  <span className="eye">o</span>
-                  <span className="pupil" style={calculateEyeStyle(1)}></span>
-                </span>
-                <span className="eye-container">
-                  <span className="eye">o</span>
-                  <span className="pupil" style={calculateEyeStyle(2)}></span>
-                </span>
-                m
-              </h1>
+              {renderLogo()}
               <div className="pulsing-light"></div>
             </div>
 
@@ -302,7 +312,7 @@ const Sidebar = ({ userRole: propUserRole }: SidebarProps) => {
           <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
             <div className="logo-container" onClick={() => navigateTo("/home")}>
               <div className="pulsing-light"></div>
-              <h1 className="app-name">Winoom</h1>
+              {renderLogo()}
               <div className="pulsing-light"></div>
             </div>
 
@@ -341,6 +351,9 @@ const Sidebar = ({ userRole: propUserRole }: SidebarProps) => {
           </div>
         </div>
       );
+    
+    default:
+      return null;
   }
 };
 
