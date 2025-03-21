@@ -60,6 +60,17 @@ app.post("/api/getClasses", (req, res) => {
   res.json({ classes });
 });
 
+
+app.post("/api/getStudentClass", (req, res) => {
+
+  let studentClass =  {
+     name: "4/B" 
+    }
+  
+  res.json({ studentClass });
+});
+
+
 // Homework endpoint
 app.get("/api/homework", (req, res) => {
   const pendingAssignments = [

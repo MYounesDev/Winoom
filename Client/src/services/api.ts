@@ -30,6 +30,10 @@ export const getClasses = async (userRole: string) => {
   return postData('getClasses', { userRole });
 };
 
+export const getStudentClass = async (userRole: string) => {
+  return postData('getStudentClass', { userRole });
+};
+
 export const getHomework = async () => {
   return fetchData('homework');
 };
