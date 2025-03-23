@@ -34,6 +34,12 @@ export const getStudentClass = async (userRole: string) => {
   return postData('getStudentClass', { userRole });
 };
 
+
+export const postStudent = async (studentsData = {}) => {
+  return postData('students', studentsData);
+};
+
+
 export const getHomework = async () => {
   return fetchData('homework');
 };

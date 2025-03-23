@@ -56,7 +56,7 @@ const Notes = () => {
               )}
             </div>
             <div className="flex justify-end">
-              <button className="bg-blue-500 text-white px-4 py-2 rounded-md">
+              <button className="themed-button">
                 Create New Note
               </button>
             </div>

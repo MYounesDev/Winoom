@@ -1,4 +1,4 @@
-cls && cd server && start npm start dev && cd .. && cd client && npm run dev
+cls && cd server && start npm run dev && cd .. && cd client && npm run dev
 :                                                           :
 :              What this file do ?                          :
 :                                                           :

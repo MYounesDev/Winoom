@@ -20,3 +20,83 @@
 }
 
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+
+
+
+.themed-button {
+  background:  var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 10px var(--glow-color);
+  outline: none;
+}
+
+.themed-button:hover {
+  box-shadow: 0 0 15px var(--glow-color);
+  transform: translateY(-2px);
+}
+
+.themed-button:active {
+  transform: translateY(1px);
+}
+
+/* Add the same glow effect from the sidebar */
+.themed-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.themed-button:hover::before {
+  opacity: 1;
+}
+
+/* Optional pulsing animation for emphasis */
+.themed-button.pulsing {
+  animation: buttonPulse 2s infinite alternate;
+}
+
+@keyframes buttonPulse {
+  0% {
+    box-shadow: 0 0 5px var(--glow-color);
+  }
+  100% {
+    box-shadow: 0 0 15px var(--glow-color), 0 0 25px var(--glow-color);
+  }
+}
+
+/* Disabled state */
+.themed-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Full-width variant */
+.themed-button.full-width {
+  width: 100%;
+  display: block;
+}

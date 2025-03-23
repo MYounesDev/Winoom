@@ -54,7 +54,7 @@ const Reports = () => {
                   {availableReports.map((report, index) => (
                     <li key={index} className="p-2 bg-gray-50 rounded flex justify-between">
                       <span>{report}</span>
-                      <button className="text-blue-500">Generate</button>
+                      <button className="themed-button">Generate</button>
                     </li>
                   ))}
                 </ul>
@@ -70,7 +70,7 @@ const Reports = () => {
                   {recentReports.map((report, index) => (
                     <li key={index} className="p-2 bg-gray-50 rounded flex justify-between">
                       <span>{report}</span>
-                      <button className="text-blue-500">View</button>
+                      <button className="themed-button">View</button>
                     </li>
                   ))}
                 </ul>

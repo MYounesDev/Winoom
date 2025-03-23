@@ -142,22 +142,21 @@ app.get("/api/calendar", (req, res) => {
   res.json({ events });
 });
 
+let students;
 // Students endpoint
 app.get("/api/students", (req, res) => {
 
   // req =>> database
-
-
-  const students = [
+  students = [
     { 
+      ID: 979, 
       name: "John Doe", 
-      id: "979", 
       class: "4/B", 
       status: "Active" 
     },
     { 
+      ID: 486, 
       name: "Jane Smith", 
-      id: "486", 
       class: "2/A", 
       status: "Active" 
     }
@@ -165,6 +164,23 @@ app.get("/api/students", (req, res) => {
   
   res.json({ students });
 });
+
+// upload students table
+app.post("/api/students", (req, res) => {
+
+  // TO DO: when add database send the req.body to database and send the update
+
+  students = students. concat(req.body);
+
+  students = Array.from(
+    new Set(students.map(student => JSON.stringify(student)))
+).map(student => JSON.parse(student));
+
+
+  console.log(students);
+  res.json( students );
+});
+
 
 // Notes endpoint
 app.get("/api/notes", (req, res) => {

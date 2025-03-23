@@ -312,7 +312,7 @@ const Sidebar = ({ userRole: propUserRole }: SidebarProps) => {
           <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
             <div className="logo-container" onClick={() => navigateTo("/home")}>
               <div className="pulsing-light"></div>
-              {renderLogo()}
+              <h1 className="app-name">Winoom</h1>
               <div className="pulsing-light"></div>
             </div>
 
