@@ -222,6 +222,98 @@ app.post("/api/students", (req, res) => {
 });
 
 
+
+
+//teachers endpoint
+let teachers;
+app.get("/api/teachers", (req, res) => {
+
+  // req =>> database
+  teachers = [
+    
+      {
+        "ID": 1000,
+        "name": "Beyza Adanır",
+        "classes": ["3/A"],
+        "lessons": {
+          "3/A": ["Math", "Turkish","science"]
+        },
+        "status": "Active"
+      },
+      {
+        "ID": 1005,
+        "name": "Mehmet CANDAN",
+        "classes": ["2/B"],
+        "lessons": {
+          "2/B": ["Math", "Turkish","science"]
+        },
+        "status": "Active"
+      },
+      {
+        "ID": 1009,
+        "name": "Tansu AKBULUT",
+        "classes": ["2/A","2/B","3/A","3/B"],
+        "lessons": {
+          "2/A":["English"],
+          "2/B":["English"],
+          "3/A":["English"],
+          "3/B":["English"],
+        },
+        "status": "Active"
+      },
+      {
+        "ID": 1002,
+        "name": "Orhan DAL",
+        "classes": ["3/C", "4/A","4/B","4/C"],
+        "lessons": {
+          "3/C":["English"],
+          "4/A":["English"],
+          "4/B":["English"],
+          "4/C":["English"],
+          
+        },
+        "status": "On Leave"
+      },
+      {
+        "ID": 1008,
+        "name": "Ömer AK",
+        "classes": ["1/A","1/B","2/A","2/B","3/A","3/B","3/C","4/A","4/B","4/C",],
+        "lessons": {
+          "1/A":["P.E."],
+          "1/B":["P.E."],
+          "2/A":["P.E."],
+          "2/B":["P.E."],
+          "3/A":["P.E."],
+          "3/B":["P.E."],
+          "3/C":["P.E."],
+          "4/A":["P.E."],
+          "4/B":["P.E."],
+          "4/C":["P.E."],
+          
+        },
+        "status": "On Leave"
+      },
+    ];
+
+  res.json({ teachers });
+});
+
+// upload students table
+app.post("/api/teachers", (req, res) => {
+
+  // TO DO: when add database send the req.body to database and send the update
+
+  teachers = teachers. concat(req.body);
+
+  teachers = Array.from(
+    new Set(teachers.map(student => JSON.stringify(student)))
+).map(student => JSON.parse(student));
+
+
+  console.log(teachers);  // DEBUG
+  res.json( teachers );
+});
+
 // Notes endpoint
 app.get("/api/notes", (req, res) => {
   const notes = [

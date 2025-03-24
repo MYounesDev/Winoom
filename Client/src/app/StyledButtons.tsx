@@ -14,6 +14,8 @@ import Classes from '@/pages/Classes';
 import Students from '@/pages/Students';
 import Notes from '@/pages/Notes';
 import Reports from '@/pages/Reports';
+import Teachers from '@/pages/Teachers';
+
 
 // Define a type for the user role
 type UserRole = 'Student' | 'Teacher' | 'Advisor' | null;
@@ -123,7 +125,7 @@ const StyledButtons = () => {
         <Route path="/students" element={<Students />} />
         <Route path="/notes" element={<Notes />} />
         <Route path="/reports" element={<Reports />} />
-    {/*    <Route path="/teachers" element={<Teachers />} />*/}
+        <Route path="/teachers" element={<Teachers />} />
         </Routes>
     </Router>
   );

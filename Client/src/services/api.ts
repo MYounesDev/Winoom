@@ -35,7 +35,7 @@ export const getStudentClass = async () => {
 };
 
 
-export const postStudent = async (studentsData = {}) => {
+export const postStudents = async (studentsData = {}) => {
   return postData('students', studentsData);
 };
 
@@ -62,6 +62,18 @@ export const getCalendar = async () => {
 
 export const getStudents = async () => {
   return fetchData('students');
+};
+
+
+
+export const postTeachers = async (TeachersData = {}) => {
+  return postData('Teachers',TeachersData);
+};
+
+
+
+export const getTeachers = async () => {
+  return fetchData('Teachers');
 };
 
 export const getNotes = async () => {

@@ -1,7 +1,7 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
+import PageTemplate from "@/components/PageTemplate";
 import axios from "axios";
-import Sidebar from '@/components/Sidebar';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 // Define a type for the user role
@@ -16,7 +16,7 @@ function Home() {
   const [message, setMessage] = useState("");
   const [inputData, setInputData] = useState(""); // Track input data
   const [userRole, setUserRole] = useState<UserRole>(null);
-  
+
   // Get location state from react-router
   const location = useLocation();
   const navigate = useNavigate();
@@ -55,22 +55,21 @@ function Home() {
   };
 
   return (
-    <div style={{ display: "flex" }}>
-      <Sidebar userRole={userRole} />
+    <PageTemplate title="Home">
       <div className="p-8 w-full">
         <h1 className="text-2xl font-bold">React + Express</h1>
         <h2 className="text-xl mt-4">Welcome, {userRole || 'Guest'}</h2>
 
         <div className="mt-6">
-          <input 
-            type="text" 
-            value={inputData} 
-            onChange={(e) => setInputData(e.target.value)} 
+          <input
+            type="text"
+            value={inputData}
+            onChange={(e) => setInputData(e.target.value)}
             placeholder="Enter some data"
-            className="p-2 border rounded mr-2" 
+            className="p-2 border rounded mr-2"
           />
 
-          <button 
+          <button
             onClick={handleSendData}
             className="bg-blue-500 text-white px-4 py-2 rounded"
           >
@@ -80,7 +79,7 @@ function Home() {
           {message && <p className="mt-4">{message}</p>}
         </div>
       </div>
-    </div>
+      </PageTemplate>
   );
 }
 

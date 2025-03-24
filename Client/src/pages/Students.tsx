@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
 import PageTemplate from "@/components/PageTemplate";
-import { getStudents, postStudent } from "@/services/api";
+import { getStudents, postStudents } from "@/services/api";
 import * as XLSX from "xlsx";
 import { ArrowUpDown, X, UserPlus, Upload } from "lucide-react";
 
@@ -63,7 +63,7 @@ const Students = () => {
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
         // Send data to backend using the postData function directly
-        const response = await postStudent(jsonData);
+        const response = await postStudents(jsonData);
 
         // Update students with the response
         setStudents(response);
@@ -273,7 +273,7 @@ const Students = () => {
       };
 
       // Send the new student to the server
-      const response = await postStudent([studentWithID]);
+      const response = await postStudents([studentWithID]);
 
       // Update the state with the new data
       setStudents(response);

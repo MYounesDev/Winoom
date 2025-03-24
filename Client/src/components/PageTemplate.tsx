@@ -41,9 +41,9 @@ const PageTemplate: React.FC<PageTemplateProps> = ({ title, children }) => {
   }, [location, navigate]);
 
   return (
-    <div style={{ display: "flex" }}>
+    <div className="app-container">
       <Sidebar userRole={userRole} />
-      <div className="p-8 w-full">
+      <div className="main-content">
         <h1 className="text-2xl font-bold mb-6">{title}</h1>
         {children}
       </div>
