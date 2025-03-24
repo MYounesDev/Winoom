@@ -44,7 +44,7 @@ app.post("/api/sendData", (req, res) => {
 // New endpoints for sidebar items
 
 // Classes endpoint
-app.post("/api/getClasses", (req, res) => {
+app.get("/api/getClasses", (req, res) => {
 
   let classes = [];
   
