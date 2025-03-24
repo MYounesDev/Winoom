@@ -1,20 +1,93 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
+
+// Swagger configuration
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "School Management API",
+      version: "1.0.0",
+      description: "API documentation for School Management System",
+      contact: {
+        name: "API Support",
+      },
+    },
+    servers: [
+      {
+        url: `http://localhost:${PORT}`,
+        description: "Development server",
+      },
+    ],
+  },
+  apis: ["./server.js"], // Path to the API docs
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-// Sample API route
+/**
+ * @swagger
+ * /api/message:
+ *   get:
+ *     summary: Returns a welcome message
+ *     tags: [General]
+ *     responses:
+ *       200:
+ *         description: A welcome message
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
 app.get("/api/message", (req, res) => {
   res.json({
     message: `||| Hello from express |||`,
   });
 });
 
+/**
+ * @swagger
+ * /api/sendData:
+ *   post:
+ *     summary: Processes user role data
+ *     tags: [General]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               data:
+ *                 type: string
+ *                 description: User role (Student, Teacher, Advisor)
+ *     responses:
+ *       200:
+ *         description: Confirmation message based on user role
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 receivedData:
+ *                   type: string
+ */
 app.post("/api/sendData", (req, res) => {
   const { data } = req.body;
   console.log("Data received:", data);
@@ -41,37 +114,103 @@ app.post("/api/sendData", (req, res) => {
   });
 });
 
-// New endpoints for sidebar items
-
-// Classes endpoint
+/**
+ * @swagger
+ * /api/getClasses:
+ *   get:
+ *     summary: Returns a list of classes
+ *     tags: [Classes]
+ *     responses:
+ *       200:
+ *         description: List of classes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 classes:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                       students:
+ *                         type: integer
+ */
 app.get("/api/getClasses", (req, res) => {
-
-  let classes = [];
-  
-
-    // For Teacher and Advisor
-    classes = [
-      { name: "4/B" , students: 30 },
-      { name: "2/A" , students: 25 },
-      { name: "3/D" , students: 28 }
-    ];
-  
+  let classes = [
+    { name: "4/B", students: 30 },
+    { name: "2/A", students: 25 },
+    { name: "3/D", students: 28 }
+  ];
   
   res.json({ classes });
 });
 
-
+/**
+ * @swagger
+ * /api/getStudentClass:
+ *   get:
+ *     summary: Returns the class of a student
+ *     tags: [Classes]
+ *     responses:
+ *       200:
+ *         description: Student's class information
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 studentClass:
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ */
 app.get("/api/getStudentClass", (req, res) => {
-
-  let studentClass =  {
-     name: "4/B" 
-    }
+  let studentClass = {
+    name: "4/B" 
+  };
   
   res.json({ studentClass });
 });
 
-
-// Homework endpoint
+/**
+ * @swagger
+ * /api/homework:
+ *   get:
+ *     summary: Returns pending and completed assignments
+ *     tags: [Homework]
+ *     responses:
+ *       200:
+ *         description: List of pending and completed assignments
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 pendingAssignments:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                       dueDate:
+ *                         type: string
+ *                       status:
+ *                         type: string
+ *                 completedAssignments:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                       status:
+ *                         type: string
+ */
 app.get("/api/homework", (req, res) => {
   const pendingAssignments = [
     { 
@@ -96,7 +235,27 @@ app.get("/api/homework", (req, res) => {
   res.json({ pendingAssignments, completedAssignments });
 });
 
-// Lessons endpoint
+/**
+ * @swagger
+ * /api/lessons:
+ *   get:
+ *     summary: Returns list of lessons by subject
+ *     tags: [Lessons]
+ *     responses:
+ *       200:
+ *         description: Lessons grouped by subject
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 lessons:
+ *                   type: object
+ *                   additionalProperties:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ */
 app.get("/api/lessons", (req, res) => {
   const lessons = {
     Mathematics: [
@@ -112,7 +271,39 @@ app.get("/api/lessons", (req, res) => {
   res.json({ lessons });
 });
 
-// Books endpoint
+/**
+ * @swagger
+ * /api/books:
+ *   get:
+ *     summary: Returns textbooks and digital resources
+ *     tags: [Books]
+ *     responses:
+ *       200:
+ *         description: Lists of textbooks and digital resources
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 textbooks:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       title:
+ *                         type: string
+ *                       author:
+ *                         type: string
+ *                 digitalResources:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       title:
+ *                         type: string
+ *                       source:
+ *                         type: string
+ */
 app.get("/api/books", (req, res) => {
   const textbooks = [
     { 
@@ -135,8 +326,73 @@ app.get("/api/books", (req, res) => {
   res.json({ textbooks, digitalResources });
 });
 
-
-// Calendar endpoint
+/**
+ * @swagger
+ * /api/calendar:
+ *   get:
+ *     summary: Returns calendar events
+ *     tags: [Calendar]
+ *     responses:
+ *       200:
+ *         description: List of calendar events
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 events:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       title:
+ *                         type: string
+ *                       date:
+ *                         type: string
+ *                       time:
+ *                         type: string
+ *                       location:
+ *                         type: string
+ *   post:
+ *     summary: Adds a new calendar event
+ *     tags: [Calendar]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               date:
+ *                 type: string
+ *               time:
+ *                 type: string
+ *               location:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Updated list of calendar events
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 events:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       title:
+ *                         type: string
+ *                       date:
+ *                         type: string
+ *                       time:
+ *                         type: string
+ *                       location:
+ *                         type: string
+ */
 let events;
 app.get("/api/calendar", (req, res) => {
   events = [
@@ -164,28 +420,86 @@ app.get("/api/calendar", (req, res) => {
   res.json({ events });
 });
 
-
-// post and update the new calender event
 app.post("/api/calendar", (req, res) => {
-
   // TO DO: when add database send the req.body to database and send the update
-
-  events = events. concat(req.body);
+  events = events.concat(req.body);
 
   events = Array.from(
     new Set(events.map(events => JSON.stringify(events)))
-).map(events => JSON.parse(events));
-
+  ).map(events => JSON.parse(events));
 
   console.log(events);  // DEBUG
   res.json({ events });
 });
 
-
+/**
+ * @swagger
+ * /api/students:
+ *   get:
+ *     summary: Returns list of students
+ *     tags: [Students]
+ *     responses:
+ *       200:
+ *         description: List of students
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 students:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       ID:
+ *                         type: integer
+ *                       name:
+ *                         type: string
+ *                       class:
+ *                         type: string
+ *                       status:
+ *                         type: string
+ *   post:
+ *     summary: Adds new students
+ *     tags: [Students]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 ID:
+ *                   type: integer
+ *                 name:
+ *                   type: string
+ *                 class:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: Updated list of students
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   ID:
+ *                     type: integer
+ *                   name:
+ *                     type: string
+ *                   class:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ */
 let students;
-// Students endpoint
 app.get("/api/students", (req, res) => {
-
   // req =>> database
   students = [
     { 
@@ -205,116 +519,215 @@ app.get("/api/students", (req, res) => {
   res.json({ students });
 });
 
-// upload students table
 app.post("/api/students", (req, res) => {
-
   // TO DO: when add database send the req.body to database and send the update
-
-  students = students. concat(req.body);
+  students = students.concat(req.body);
 
   students = Array.from(
     new Set(students.map(student => JSON.stringify(student)))
-).map(student => JSON.parse(student));
+  ).map(student => JSON.parse(student));
 
-
- // console.log(students);  // DEBUG
-  res.json( students );
+  // console.log(students);  // DEBUG
+  res.json(students);
 });
 
-
-
-
-//teachers endpoint
+/**
+ * @swagger
+ * /api/teachers:
+ *   get:
+ *     summary: Returns list of teachers
+ *     tags: [Teachers]
+ *     responses:
+ *       200:
+ *         description: List of teachers
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 teachers:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       ID:
+ *                         type: integer
+ *                       name:
+ *                         type: string
+ *                       classes:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                       lessons:
+ *                         type: object
+ *                         additionalProperties:
+ *                           type: array
+ *                           items:
+ *                             type: string
+ *                       status:
+ *                         type: string
+ *   post:
+ *     summary: Adds new teachers
+ *     tags: [Teachers]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: object
+ *               properties:
+ *                 ID:
+ *                   type: integer
+ *                 name:
+ *                   type: string
+ *                 classes:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                 lessons:
+ *                   type: object
+ *                   additionalProperties:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                 status:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: Updated list of teachers
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   ID:
+ *                     type: integer
+ *                   name:
+ *                     type: string
+ *                   classes:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                   lessons:
+ *                     type: object
+ *                     additionalProperties:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                   status:
+ *                     type: string
+ */
 let teachers;
 app.get("/api/teachers", (req, res) => {
-
   // req =>> database
   teachers = [
-    
-      {
-        "ID": 1000,
-        "name": "Beyza Adanır",
-        "classes": ["3/A"],
-        "lessons": {
-          "3/A": ["Math", "Turkish","science"]
-        },
-        "status": "Active"
+    {
+      "ID": 1000,
+      "name": "Beyza Adanır",
+      "classes": ["3/A"],
+      "lessons": {
+        "3/A": ["Math", "Turkish","science"]
       },
-      {
-        "ID": 1005,
-        "name": "Mehmet CANDAN",
-        "classes": ["2/B"],
-        "lessons": {
-          "2/B": ["Math", "Turkish","science"]
-        },
-        "status": "Active"
+      "status": "Active"
+    },
+    {
+      "ID": 1005,
+      "name": "Mehmet CANDAN",
+      "classes": ["2/B"],
+      "lessons": {
+        "2/B": ["Math", "Turkish","science"]
       },
-      {
-        "ID": 1009,
-        "name": "Tansu AKBULUT",
-        "classes": ["2/A","2/B","3/A","3/B"],
-        "lessons": {
-          "2/A":["English"],
-          "2/B":["English"],
-          "3/A":["English"],
-          "3/B":["English"],
-        },
-        "status": "Active"
+      "status": "Active"
+    },
+    {
+      "ID": 1009,
+      "name": "Tansu AKBULUT",
+      "classes": ["2/A","2/B","3/A","3/B"],
+      "lessons": {
+        "2/A":["English"],
+        "2/B":["English"],
+        "3/A":["English"],
+        "3/B":["English"],
       },
-      {
-        "ID": 1002,
-        "name": "Orhan DAL",
-        "classes": ["3/C", "4/A","4/B","4/C"],
-        "lessons": {
-          "3/C":["English"],
-          "4/A":["English"],
-          "4/B":["English"],
-          "4/C":["English"],
-          
-        },
-        "status": "On Leave"
+      "status": "Active"
+    },
+    {
+      "ID": 1002,
+      "name": "Orhan DAL",
+      "classes": ["3/C", "4/A","4/B","4/C"],
+      "lessons": {
+        "3/C":["English"],
+        "4/A":["English"],
+        "4/B":["English"],
+        "4/C":["English"],
+        
       },
-      {
-        "ID": 1008,
-        "name": "Ömer AK",
-        "classes": ["1/A","1/B","2/A","2/B","3/A","3/B","3/C","4/A","4/B","4/C",],
-        "lessons": {
-          "1/A":["P.E."],
-          "1/B":["P.E."],
-          "2/A":["P.E."],
-          "2/B":["P.E."],
-          "3/A":["P.E."],
-          "3/B":["P.E."],
-          "3/C":["P.E."],
-          "4/A":["P.E."],
-          "4/B":["P.E."],
-          "4/C":["P.E."],
-          
-        },
-        "status": "On Leave"
+      "status": "On Leave"
+    },
+    {
+      "ID": 1008,
+      "name": "Ömer AK",
+      "classes": ["1/A","1/B","2/A","2/B","3/A","3/B","3/C","4/A","4/B","4/C",],
+      "lessons": {
+        "1/A":["P.E."],
+        "1/B":["P.E."],
+        "2/A":["P.E."],
+        "2/B":["P.E."],
+        "3/A":["P.E."],
+        "3/B":["P.E."],
+        "3/C":["P.E."],
+        "4/A":["P.E."],
+        "4/B":["P.E."],
+        "4/C":["P.E."],
+        
       },
-    ];
+      "status": "On Leave"
+    },
+  ];
 
   res.json({ teachers });
 });
 
-// upload students table
 app.post("/api/teachers", (req, res) => {
-
   // TO DO: when add database send the req.body to database and send the update
-
-  teachers = teachers. concat(req.body);
+  teachers = teachers.concat(req.body);
 
   teachers = Array.from(
     new Set(teachers.map(student => JSON.stringify(student)))
-).map(student => JSON.parse(student));
-
+  ).map(student => JSON.parse(student));
 
   console.log(teachers);  // DEBUG
-  res.json( teachers );
+  res.json(teachers);
 });
 
-// Notes endpoint
+/**
+ * @swagger
+ * /api/notes:
+ *   get:
+ *     summary: Returns list of notes
+ *     tags: [Notes]
+ *     responses:
+ *       200:
+ *         description: List of notes
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 notes:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       title:
+ *                         type: string
+ *                       lastUpdated:
+ *                         type: string
+ */
 app.get("/api/notes", (req, res) => {
   const notes = [
     { 
@@ -330,7 +743,29 @@ app.get("/api/notes", (req, res) => {
   res.json({ notes });
 });
 
-// Reports endpoint
+/**
+ * @swagger
+ * /api/reports:
+ *   get:
+ *     summary: Returns available and recent reports
+ *     tags: [Reports]
+ *     responses:
+ *       200:
+ *         description: Lists of available and recent reports
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 availableReports:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                 recentReports:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ */
 app.get("/api/reports", (req, res) => {
   const availableReports = [
     "Class Performance Report",
@@ -348,4 +783,5 @@ app.get("/api/reports", (req, res) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Swagger documentation available at http://localhost:${PORT}/api-docs`);
 });
