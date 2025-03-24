@@ -26,17 +26,21 @@ export const postData = async (endpoint: string, data = {}) => {
 };
 
 // Specific API calls for different components
-export const getClasses = async (userRole: string) => {
-  return postData('getClasses', { userRole });
+export const getClasses = async () => {
+  return fetchData('getClasses');
 };
 
-export const getStudentClass = async (userRole: string) => {
-  return postData('getStudentClass', { userRole });
+export const getStudentClass = async () => {
+  return fetchData('getStudentClass');
 };
 
 
 export const postStudent = async (studentsData = {}) => {
   return postData('students', studentsData);
+};
+
+export const postEvent = async (eventData = {}) => {
+  return postData('calendar', eventData);
 };
 
 

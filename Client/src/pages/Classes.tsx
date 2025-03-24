@@ -25,8 +25,7 @@ const Classes = () => {
     const fetchClasses = async () => {
       try {
         // Get userRole from sessionStorage if not in location state
-        const userRole = state?.role || sessionStorage.getItem('userRole') || 'Teacher';
-        const response = await getClasses(userRole);
+        const response = await getClasses();
         setClasses(response.classes);
         setLoading(false);
       } catch (err) {

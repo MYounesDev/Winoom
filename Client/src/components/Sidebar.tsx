@@ -102,7 +102,7 @@ const Sidebar = ({ userRole: propUserRole }: SidebarProps) => {
 
   let root = document.documentElement;
   const studentTheme = () => {
-    root.style.setProperty("--primary-color", "#f3ff4f");
+    root.style.setProperty("--primary-color", "#f6df19");
     root.style.setProperty("--secondary-color", "#ff9900");
     root.style.setProperty("--accent-color", "rgba(252, 255, 64, 0.89)");
     root.style.setProperty("--glow-color", "rgb(252, 194, 4)");

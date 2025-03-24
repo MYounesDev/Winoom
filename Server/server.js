@@ -61,7 +61,7 @@ app.post("/api/getClasses", (req, res) => {
 });
 
 
-app.post("/api/getStudentClass", (req, res) => {
+app.get("/api/getStudentClass", (req, res) => {
 
   let studentClass =  {
      name: "4/B" 
@@ -135,12 +135,52 @@ app.get("/api/books", (req, res) => {
   res.json({ textbooks, digitalResources });
 });
 
+
 // Calendar endpoint
+let events;
 app.get("/api/calendar", (req, res) => {
-  const events = [];
-  
+  events = [
+    {
+      title:"23 Nisan Etkinlik",
+      date:"2025-04-23",
+      time:"9:00 AM",
+      location:"School Yard"
+    },
+    {
+      title:"18 mart tiyatro",
+      date:"2025-03-18",
+      time:"2:00 PM",
+      location:"School Conference"
+    },
+    {
+      title:"Math Test 3/A",
+      date:"2025-03-28",
+      time:"11:00 AM",
+      location:"3/A"
+    }
+  ];
+
+  console.log(events);  // DEBUG
   res.json({ events });
 });
+
+
+// post and update the new calender event
+app.post("/api/calendar", (req, res) => {
+
+  // TO DO: when add database send the req.body to database and send the update
+
+  events = events. concat(req.body);
+
+  events = Array.from(
+    new Set(events.map(events => JSON.stringify(events)))
+).map(events => JSON.parse(events));
+
+
+  console.log(events);  // DEBUG
+  res.json({ events });
+});
+
 
 let students;
 // Students endpoint
@@ -177,7 +217,7 @@ app.post("/api/students", (req, res) => {
 ).map(student => JSON.parse(student));
 
 
-  console.log(students);
+ // console.log(students);  // DEBUG
   res.json( students );
 });
 

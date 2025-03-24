@@ -1,26 +1,4 @@
-/* gold - dark blue
-:root {
-  --primary-color: #f3ff4f;
-  --secondary-color: #ff9900;
-  --sidebar-bg: #1a1a2e;
-  --sidebar-hover-bg: #16213e;
-  --accent-color: rgba(252, 255, 64, 0.89);
-  --glow-color: rgb(252, 194, 4);
-  --border-color: rgba(255, 237, 79, 0.1);
-  --button-hover-bg: #d7e422;
-}
-*/
-:root {
-  --primary-color: #4f8cff;
-  --secondary-color: #c961ff;
-  --sidebar-bg: #1a1a2e;
-  --sidebar-hover-bg: #16213e;
-  --accent-color: rgba(64, 128, 255, 0.1);
-  --glow-color: rgba(79, 140, 255, 0.5);
-  --border-color: rgba(79, 140, 255, 0.1);
-  --button-hover-bg: #0f3460;
-}
-
+@import "./globals.css";
 
 
 .sidebar-container {
