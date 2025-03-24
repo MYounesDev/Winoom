@@ -1,10 +1,9 @@
-// src/services/api.ts
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
 // Generic fetch function for all components
-export const fetchData = async (endpoint: string, params = {}) => {
+export const fetchData = async (endpoint:string, params = {}) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/${endpoint}`, { params });
     return response.data;
@@ -14,8 +13,8 @@ export const fetchData = async (endpoint: string, params = {}) => {
   }
 };
 
-// Post data to the server
-export const postData = async (endpoint: string, data = {}) => {
+// Generic post function
+export const postData = async (endpoint:string, data = {}) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/${endpoint}`, data);
     return response.data;
@@ -25,7 +24,7 @@ export const postData = async (endpoint: string, data = {}) => {
   }
 };
 
-// Specific API calls for different components
+// Fetch functions
 export const getClasses = async () => {
   return fetchData('getClasses');
 };
@@ -33,16 +32,6 @@ export const getClasses = async () => {
 export const getStudentClass = async () => {
   return fetchData('getStudentClass');
 };
-
-
-export const postStudents = async (studentsData = {}) => {
-  return postData('students', studentsData);
-};
-
-export const postEvent = async (eventData = {}) => {
-  return postData('calendar', eventData);
-};
-
 
 export const getHomework = async () => {
   return fetchData('homework');
@@ -64,14 +53,6 @@ export const getStudents = async () => {
   return fetchData('students');
 };
 
-
-
-export const postTeachers = async (TeachersData = {}) => {
-  return postData('Teachers',TeachersData);
-};
-
-
-
 export const getTeachers = async () => {
   return fetchData('Teachers');
 };
@@ -82,4 +63,22 @@ export const getNotes = async () => {
 
 export const getReports = async () => {
   return fetchData('reports');
+};
+
+
+
+
+
+
+// Post functions
+export const postStudents = async (studentsData = {}) => {
+  return postData('students', studentsData);
+};
+
+export const postEvent = async (eventData = {}) => {
+  return postData('calendar', eventData);
+};
+
+export const postTeachers = async (teachersData = {}) => {
+  return postData('Teachers', teachersData);
 };

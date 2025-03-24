@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PageTemplate from "@/components/PageTemplate";
-import { getCalendar, postEvent } from "@/services/api";
+import { getCalendar, postEvent } from "@/services/API";
 import { CalendarDays, MapPin, Clock, Plus, X } from "lucide-react";
 
 interface Event {

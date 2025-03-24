@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PageTemplate from "@/components/PageTemplate";
-import { getReports } from "@/services/api"; // Assuming this is where your API functions are
+import { getReports } from "@/services/API"; // Assuming this is where your API functions are
 
 const Reports = () => {
   const [availableReports, setAvailableReports] = useState<string[]>([]);

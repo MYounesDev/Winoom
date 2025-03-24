@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PageTemplate from "@/components/PageTemplate";
-import { getBooks } from "@/services/api";
+import { getBooks } from "@/services/API";
 
 interface Book {
   title: string;

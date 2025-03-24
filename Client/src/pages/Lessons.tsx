@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PageTemplate from "@/components/PageTemplate";
-import { getLessons } from "@/services/api";
+import { getLessons } from "@/services/API";
 
 interface LessonsData {
   [subject: string]: string[];

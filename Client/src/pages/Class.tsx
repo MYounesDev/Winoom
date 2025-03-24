@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PageTemplate from "@/components/PageTemplate";
-import { getStudentClass } from "@/services/api";
+import { getStudentClass } from "@/services/API";
 import { useLocation } from "react-router-dom";
 
 interface LocationState {

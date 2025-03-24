@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PageTemplate from "@/components/PageTemplate";
-import { getHomework } from "@/services/api";
+import { getHomework } from "@/services/API";
 
 interface Assignment {
   name: string;

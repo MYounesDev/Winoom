@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PageTemplate from "@/components/PageTemplate";
-import { getNotes } from "@/services/api";
+import { getNotes } from "@/services/API";
 
 interface Note {
   title: string;

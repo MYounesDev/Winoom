@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
 import PageTemplate from "@/components/PageTemplate";
-import { getTeachers, postTeachers } from "@/services/api";
+import { getTeachers, postTeachers } from "@/services/API";
 import * as XLSX from "xlsx";
 import { ArrowUpDown, X, UserPlus, Upload } from "lucide-react";
 
