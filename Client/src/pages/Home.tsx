@@ -71,7 +71,7 @@ function Home() {
 
           <button
             onClick={handleSendData}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="themed-button"
           >
             Send Data
           </button>

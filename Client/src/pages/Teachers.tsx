@@ -2,7 +2,7 @@ import React, { useState, useEffect, ChangeEvent } from "react";
 import PageTemplate from "@/components/PageTemplate";
 import { getTeachers, postTeachers } from "@/services/API";
 import * as XLSX from "xlsx";
-import { ArrowUpDown, X, UserPlus, Upload } from "lucide-react";
+import { ArrowUpDown, X, UserPlus, Upload, FileSpreadsheet, Edit, Trash2 } from "lucide-react";
 
 interface Teacher {
   ID: number;
@@ -40,6 +40,13 @@ const Teachers = () => {
     status: "Active",
   });
   const [formError, setFormError] = useState("");
+  const [selectedTeacherDetails, setSelectedTeacherDetails] = useState<{
+    teacherID: number | null;
+    selectedClass: string | null;
+  }>({
+    teacherID: null,
+    selectedClass: null
+  });
 
   useEffect(() => {
     const fetchTeachers = async () => {
@@ -109,8 +116,10 @@ const Teachers = () => {
         const response = await postTeachers(formattedData);
         setTeachers(response);
         setFilteredTeachers(response);
-      } catch (err) {
-        setError("Failed to process Excel file.");
+      } catch (err:any) {
+        console.error("Failed to process Excel file: ", err);
+        setError("Failed to process Excel file: " + err.message);
+        console.log(err.message)      
       } finally {
         setUploading(false);
       }
@@ -129,8 +138,8 @@ const Teachers = () => {
     <ArrowUpDown className={`ml-2 h-4 w-4 transition-transform ${
       sortField === field 
         ? sortDirection === "asc" 
-          ? "text-[var(--primary-color)]" 
-          : "text-[var(--secondary-color)] rotate-180" 
+          ? "text-indigo-600" 
+          : "text-indigo-600 rotate-180" 
         : "text-gray-400"
     }`} />
   );
@@ -153,12 +162,17 @@ const Teachers = () => {
       : Math.max(...teachers.map(t => t.ID)) + 1;
   };
 
-  const getStatusColor = (status: string) => {
-    return status === "Active"
-      ? "bg-[var(--primary-color)]/10 text-[var(--primary-color)]"
-      : status === "Inactive"
-      ? "bg-gray-100 text-gray-600"
-      : "bg-red-100 text-red-800"; // Changed "On Leave" to red
+  const getStatusVariant = (status: string) => {
+    switch (status) {
+      case "Active": 
+        return "bg-emerald-50 text-emerald-600 border border-emerald-200";
+      case "Inactive": 
+        return "bg-gray-100 text-gray-600 border border-gray-200";
+      case "On Leave": 
+        return "bg-amber-50 text-amber-600 border border-amber-200";
+      default: 
+        return "bg-gray-100 text-gray-600";
+    }
   };
 
   const handleSubmitTeacher = async (e: React.FormEvent) => {
@@ -197,202 +211,318 @@ const Teachers = () => {
   };
 
   return (
-    <PageTemplate title="Teacher Management">
-      <div className="p-6 space-y-6">
-        {/* Search Bar */}
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search teachers by name, ID, or class..."
-            className="w-full p-4 pr-10 rounded-lg border border-[var(--border-color)] focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--glow-color)] bg-white shadow-sm transition-all duration-300 placeholder-gray-400"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </div>
-
-        {/* Main Content */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-[var(--border-color)]">
-          {loading ? (
-            <div className="p-6 text-center text-gray-500 animate-pulse">Loading teachers...</div>
-          ) : error ? (
-            <div className="p-6 text-center text-red-500 bg-red-50">{error}</div>
-          ) : (
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-gray-800">Teacher List</h3>
-                <span className="text-sm text-gray-500">{filteredTeachers.length} teachers</span>
-              </div>
-
-              {filteredTeachers.length === 0 ? (
-                <p className="text-center text-gray-500 py-8">No teachers found</p>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-[var(--accent-color)]">
-                      <tr>
-                        {["ID", "name", "status"].map((field) => (
-                          <th
-                            key={field}
-                            className="p-3 text-left text-sm font-semibold text-gray-700 cursor-pointer hover:bg-[var(--glow-color)] transition-colors"
-                            onClick={() => handleSort(field as SortField)}
-                          >
-                            {field.charAt(0).toUpperCase() + field.slice(1)}
-                            {getSortIndicator(field as SortField)}
-                          </th>
-                        ))}
-                        <th className="p-3 text-left text-sm font-semibold text-gray-700">Classes & Lessons</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredTeachers.map((teacher) => (
-                        <tr 
-                          key={teacher.ID} 
-                          className="border-t border-[var(--border-color)] hover:bg-[var(--accent-color)] transition-colors"
-                        >
-                          <td className="p-3 text-gray-700">{teacher.ID}</td>
-                          <td className="p-3 font-medium text-gray-800">{teacher.name}</td>
-                          <td className="p-3">
-                            <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(teacher.status)}`}>
-                              {teacher.status}
-                            </span>
-                          </td>
-                          <td className="p-3 text-gray-600">
-                            {teacher.classes.map((cls) => (
-                              <div key={cls} className="mb-1">
-                                <span className="font-medium text-[var(--primary-color)]">{cls}:</span>{" "}
-                                {teacher.lessons[cls]?.join(", ") || "N/A"}
-                              </div>
-                            ))}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+    <PageTemplate >
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8">
+        <div className="max-w-7xl mx-auto space-y-6">
+          {/* Elegant Header */}
+          <div className="bg-white shadow-xl rounded-2xl p-6 flex justify-between items-center border-l-4" style={{ borderColor: 'var(--primary-color)' }}>
+            <div>
+              <h1 className="text-3xl font-extrabold text-gray-800 tracking-tight">
+                Teacher Management
+              </h1>
+              <p className="text-gray-500 mt-2">
+                Manage and organize your teaching staff efficiently
+              </p>
             </div>
-          )}
-        </div>
-
-        {/* Buttons */}
-        <div className="flex justify-end gap-4">
-          <button
-            onClick={handleAddTeacher}
-            className="px-5 py-3 bg-[var(--primary-color)] text-white rounded-lg hover:bg-[var(--button-hover-bg)] focus:ring-2 focus:ring-[var(--glow-color)] transition-all flex items-center gap-2 shadow-md hover:shadow-lg disabled:opacity-50"
-            disabled={uploading || isSubmitting}
-          >
-            <UserPlus className="h-5 w-5" /> Add Teacher
-          </button>
-          <label
-            className={`px-5 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 focus:ring-2 focus:ring-[var(--glow-color)] transition-all flex items-center gap-2 cursor-pointer shadow-md hover:shadow-lg ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}
-          >
-            <Upload className="h-5 w-5" />
-            {uploading ? "Uploading..." : "Import Excel"}
-            <input
-              type="file"
-              onChange={handleExcelFileChange}
-              accept=".xlsx,.xls"
-              className="hidden"
-              disabled={uploading || isSubmitting}
-            />
-          </label>
-        </div>
-      </div>
-
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl border border-[var(--border-color)] animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-semibold text-gray-800">Add New Teacher</h3>
-              <button
-                onClick={() => setShowModal(false)}
-                className="p-1 hover:bg-[var(--accent-color)] rounded-full transition-colors"
-                disabled={isSubmitting}
-              >
-                <X className="h-5 w-5 text-gray-600" />
+            <div className="flex space-x-4">
+              <button 
+                onClick={handleAddTeacher}
+                className="themed-button"
+                >
+                <UserPlus className="h-5 w-5" />
+                <span>Add Teacher</span>
               </button>
+              <label 
+                className="group flex items-center space-x-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all transform hover:-translate-y-1 hover:scale-105 shadow-lg cursor-pointer"
+              >
+                <FileSpreadsheet className="h-5 w-5" />
+                <span>Import Excel</span>
+                <input
+                  type="file"
+                  onChange={handleExcelFileChange}
+                  accept=".xlsx,.xls"
+                  className="hidden"
+                />
+              </label>
+            </div>
+          </div>
+
+          {/* Search and Filter Section */}
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <div className="relative mb-4">
+              <input
+                type="text"
+                placeholder="Search teachers by name, ID, or class..."
+                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 text-gray-700"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <svg 
+                className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
             </div>
 
-            {formError && (
-              <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg border-l-4 border-red-500">
-                {formError}
+            {/* Loading and Error States */}
+            {loading ? (
+              <div className="text-center py-8 text-gray-500 animate-pulse">
+                Loading teachers...
+              </div>
+            ) : error ? (
+              <div className="text-center py-8 text-red-500 bg-red-50 rounded-lg">
+                {error}
+              </div>
+            ) : filteredTeachers.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                No teachers found
+              </div>
+            ) : (
+              /* Teacher List */
+              <div className="overflow-x-auto">
+                <table className="w-full bg-white rounded-xl overflow-hidden shadow-sm">
+                  <thead className="bg-indigo-50 border-b border-gray-200">
+                    <tr>
+                      {["ID", "Name", "Status"].map((header) => (
+                        <th 
+                          key={header} 
+                          className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-indigo-100 transition-colors"
+                          onClick={() => handleSort(header.toLowerCase() as SortField)}
+                        >
+                          <div className="flex items-center">
+                            {header}
+                            {getSortIndicator(header.toLowerCase() as SortField)}
+                          </div>
+                        </th>
+                      ))}
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        Classes & Lessons
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredTeachers.map((teacher) => (
+                      <tr 
+                        key={teacher.ID} 
+                        className="hover:bg-gray-50 transition-colors border-b last:border-b-0"
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                          #{teacher.ID}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="ml-4">
+                              <div className="text-sm font-medium text-gray-900">
+                                {teacher.name}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span 
+                            className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusVariant(teacher.status)}`}
+                          >
+                            {teacher.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">
+                          {teacher.classes.map((cls) => (
+                            <div 
+                              key={cls} 
+                              className="mb-2 bg-gray-100 rounded-lg p-2 hover:bg-indigo-50 transition-colors cursor-pointer"
+                              onClick={() => setSelectedTeacherDetails({
+                                teacherID: teacher.ID,
+                                selectedClass: cls
+                              })}
+                            >
+                              <span className="font-semibold text-indigo-600">{cls}</span>
+                              <div className="text-xs text-gray-500 mt-1">
+                                {teacher.lessons[cls]?.join(", ") || "No lessons"}
+                              </div>
+                            </div>
+                          ))}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <div className="flex space-x-2">
+                            <button 
+                              className="text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50 p-2 rounded-full transition-colors"
+                              title="Edit Teacher"
+                            >
+                              <Edit className="h-5 w-5" />
+                            </button>
+                            <button 
+                              className="text-red-600 hover:text-red-900 hover:bg-red-50 p-2 rounded-full transition-colors"
+                              title="Remove Teacher"
+                            >
+                              <Trash2 className="h-5 w-5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
-
-            <form onSubmit={handleSubmitTeacher} className="space-y-5">
-              {[
-                { name: "name", label: "Teacher Name*", placeholder: "Enter full name" },
-                { name: "classes", label: "Classes* (comma-separated)", placeholder: "e.g., 1/A, 2/B" },
-                { name: "lessons", label: "Lessons* (comma-separated)", placeholder: "e.g., Math;English, Science" },
-              ].map((field) => (
-                <div key={field.name}>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {field.label}
-                  </label>
-                  <input
-                    type="text"
-                    name={field.name}
-                    value={newTeacher[field.name as keyof NewTeacher]}
-                    onChange={handleInputChange}
-                    className="w-full p-3 rounded-lg border border-[var(--border-color)] focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--glow-color)] transition-all shadow-sm"
-                    placeholder={field.placeholder}
-                    required
-                  />
-                  {field.name === "lessons" && (
-                    <p className="text-xs text-gray-500 mt-1">
-                      Example: For classes "1/A, 2/B", enter "Math;English, Science" to assign Math and English to 1/A, Science to 2/B.
-                    </p>
-                  )}
-                </div>
-              ))}
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                <select
-                  name="status"
-                  value={newTeacher.status}
-                  onChange={handleInputChange}
-                  className="w-full p-3 rounded-lg border border-[var(--border-color)] focus:border-[var(--primary-color)] focus:ring-2 focus:ring-[var(--glow-color)] transition-all shadow-sm"
-                >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                  <option value="On Leave">On Leave</option>
-                </select>
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4">
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="px-4 py-2 text-gray-600 hover:bg-[var(--accent-color)] rounded-lg transition-colors"
-                  disabled={isSubmitting}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-[var(--primary-color)] text-white rounded-lg hover:bg-[var(--button-hover-bg)] focus:ring-2 focus:ring-[var(--glow-color)] transition-all flex items-center gap-2 disabled:opacity-50"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting && (
-                    <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                  )}
-                  {isSubmitting ? "Adding..." : "Add Teacher"}
-                </button>
-              </div>
-            </form>
           </div>
         </div>
-      )}
+
+        {/* Add Teacher Modal */}
+        {showModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
+            <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl border border-gray-200 animate-in fade-in zoom-in-95 duration-200">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-2xl font-bold text-gray-800">Add New Teacher</h3>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  disabled={isSubmitting}
+                >
+                  <X className="h-6 w-6 text-gray-600" />
+                </button>
+              </div>
+
+              {formError && (
+                <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg border-l-4 border-red-500">
+                  {formError}
+                </div>
+              )}
+
+              <form onSubmit={handleSubmitTeacher} className="space-y-5">
+                {[
+                  { name: "name", label: "Teacher Name*", placeholder: "Enter full name" },
+                  { name: "classes", label: "Classes* (comma-separated)", placeholder: "e.g., 1/A, 2/B" },
+                  { name: "lessons", label: "Lessons* (comma-separated)", placeholder: "e.g., Math;English, Science" },
+                ].map((field) => (
+                  <div key={field.name}>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      {field.label}
+                    </label>
+                    <input
+                      type="text"
+                      name={field.name}
+                      value={newTeacher[field.name as keyof NewTeacher]}
+                      onChange={handleInputChange}
+                      className="w-full p-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
+                      placeholder={field.placeholder}
+                      required
+                    />
+                    {field.name === "lessons" && (
+                      <p className="text-xs text-gray-500 mt-2">
+                        Example: For classes "1/A, 2/B", enter "Math;English, Science" to assign Math and English to 1/A, Science to 2/B.
+                      </p>
+                    )}
+                  </div>
+                ))}
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                  <select
+                    name="status"
+                    value={newTeacher.status}
+                    onChange={handleInputChange}
+                    className="w-full p-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
+                  >
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                    <option value="On Leave">On Leave</option>
+                  </select>
+                </div>
+
+                <div className="flex justify-end gap-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowModal(false)}
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                    disabled={isSubmitting}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="themed-button"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting && (
+                      <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                    )}
+                    {isSubmitting ? "Adding..." : "Add Teacher"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Lessons Details Modal */}
+        {selectedTeacherDetails.teacherID && selectedTeacherDetails.selectedClass && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
+            <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl border border-gray-200 animate-in fade-in zoom-in-95 duration-200">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-2xl font-bold text-gray-800">
+                  Lessons for {selectedTeacherDetails.selectedClass}
+                </h3>
+                <button
+                  onClick={() => setSelectedTeacherDetails({ teacherID: null, selectedClass: null })}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <X className="h-6 w-6 text-gray-600" />
+                </button>
+              </div>
+
+              {(() => {
+                const selectedTeacher = teachers.find(
+                  t => t.ID === selectedTeacherDetails.teacherID
+                );
+                const lessons = selectedTeacher?.lessons[selectedTeacherDetails.selectedClass || ''] || [];
+
+                return (
+                  <div className="space-y-3">
+                    {lessons.length > 0 ? (
+                      lessons.map((lesson, index) => (
+                        <div 
+                          key={index} 
+                          className="bg-indigo-50 p-3 rounded-lg flex items-center"
+                        >
+                          <span className="mr-3 text-indigo-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                              <polyline points="14 2 14 8 20 8"></polyline>
+                              <line x1="16" y1="13" x2="8" y2="13"></line>
+                              <line x1="16" y1="17" x2="8" y2="17"></line>
+                              <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                          </span>
+                          <span className="font-medium text-gray-700">{lesson}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-center text-gray-500">No lessons found for this class</p>
+                    )}
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+        )}
+      </div>
     </PageTemplate>
   );
 };
 
 export default Teachers;
+
+//h1
+/*text-2xl font-bold text-gray-800 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent */
+
+//bt
+//bg-gradient-to-r from-indigo-640 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 focus:ring-4 focus:ring-indigo-200

@@ -116,26 +116,23 @@ const Calendar = () => {
   };
 
   return (
-    <PageTemplate title="School Calendar">
+    <PageTemplate>
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
-          <div className="flex justify-between items-center">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-800">
-                School Calendar
-              </h2>
-              <p className="text-gray-600">
-                View and manage upcoming school events
-              </p>
-            </div>
-            <button
-              onClick={() => setShowModal(true)}
-              className="themed-button flex items-center gap-2 px-4 py-2 rounded-md  transition-colors shadow-md"
-            >
-              <Plus size={18} />
-              Add Event
-            </button>
+        <div className="bg-white shadow-xl rounded-2xl p-6 flex justify-between items-center border-l-4" style={{ borderColor: 'var(--primary-color)' }}>
+          <div>
+            <h1 className="text-3xl font-extrabold text-gray-800 tracking-tight">
+              School Calendar
+            </h1>
+            <p className="text-gray-500 mt-2">
+              View and manage upcoming school events
+            </p>
           </div>
+          <button
+            onClick={() => setShowModal(true)}
+            className="themed-button"
+          >
+            Add Calendar
+          </button>
         </div>
 
         {loading ? (
@@ -303,7 +300,7 @@ const Calendar = () => {
                 </button>
                 <button
                   type="submit"
-                  className="themed-button px-4 py-2 rounded-md  focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors font-medium shadow-sm"
+                  className="themed-button"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (

@@ -11,7 +11,7 @@ interface LocationState {
 }
 
 interface PageTemplateProps {
-  title: string;
+  title?: string;
   children?: React.ReactNode;
 }
 
@@ -44,7 +44,7 @@ const PageTemplate: React.FC<PageTemplateProps> = ({ title, children }) => {
     <div className="app-container">
       <Sidebar userRole={userRole} />
       <div className="main-content">
-        <h1 className="text-2xl font-bold mb-6">{title}</h1>
+        {title ? <h1 className="text-3xl font-extrabold text-gray-800 tracking-tight">{title}</h1> : <></>}
         {children}
       </div>
     </div>
