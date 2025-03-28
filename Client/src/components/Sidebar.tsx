@@ -76,25 +76,25 @@ const Sidebar = ({ userRole: propUserRole }: SidebarProps) => {
   // Calculate eye positions based on mouse position
   const calculateEyeStyle = (eyeIndex: number) => {
     if (!eyeContainerRefs.current[eyeIndex]) return { transform: 'translate(-50%, -50%)' };
-    
+
     const eyeRect = eyeContainerRefs.current[eyeIndex]!.getBoundingClientRect();
     const eyeCenterX = eyeRect.left + eyeRect.width / 2;
     const eyeCenterY = eyeRect.top + eyeRect.height / 2;
-    
+
     // Calculate the angle between mouse and eye center
     const radian = Math.atan2(mousePosition.y - eyeCenterY, mousePosition.x - eyeCenterX);
-    
+
     // Determine the distance for pupil movement (limited by eye size)
     const maxDistance = (eyeRect.width / 2) * 0.5; // Limit movement to 50% of eye radius
     const distance = Math.min(
       Math.sqrt(Math.pow(mousePosition.x - eyeCenterX, 2) + Math.pow(mousePosition.y - eyeCenterY, 2)),
-      maxDistance
-    )/2;
-    
+        maxDistance
+      ) / 2;
+
     // Calculate pupil position
     const offsetX = Math.cos(radian) * distance;
     const offsetY = Math.sin(radian) * distance;
-    
+
     return {
       transform: `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`
     };
@@ -224,16 +224,20 @@ const Sidebar = ({ userRole: propUserRole }: SidebarProps) => {
   const renderLogo = () => (
     <h1 className="app-name">
       Win
-      <span 
-        className="eye-container" 
-        ref={(el) => { eyeContainerRefs.current[0] = el; }}
+      <span
+        className="eye-container"
+        ref={(el) => {
+          eyeContainerRefs.current[0] = el;
+        }}
       >
         <span className="eye">o</span>
         <span className="pupil" style={calculateEyeStyle(0)}></span>
       </span>
-      <span 
+      <span
         className="eye-container"
-        ref={(el) => { eyeContainerRefs.current[1] = el; }}
+        ref={(el) => {
+          eyeContainerRefs.current[1] = el;
+        }}
       >
         <span className="eye">o</span>
         <span className="pupil" style={calculateEyeStyle(1)}></span>
@@ -351,7 +355,7 @@ const Sidebar = ({ userRole: propUserRole }: SidebarProps) => {
           </div>
         </div>
       );
-    
+
     default:
       return null;
   }
