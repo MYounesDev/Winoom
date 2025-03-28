@@ -65,6 +65,20 @@ export const getReports = async () => {
   return fetchData('reports');
 };
 
+export const getStudentDashboardData = async () => {
+  return fetchData("studentDashboardData");
+}
+
+export const getTeacherDashboardData = async () => {
+  return fetchData("teacherDashboardData");
+}
+
+export const getAdvisorDashboardData = async () => {
+  return fetchData("advisorDashboardData");
+}
+
+
+
 
 
 

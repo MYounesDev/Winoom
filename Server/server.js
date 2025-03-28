@@ -36,58 +36,63 @@ app.use(cors());
 app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-/**
- * @swagger
- * /api/message:
- *   get:
- *     summary: Returns a welcome message
- *     tags: [General]
- *     responses:
- *       200:
- *         description: A welcome message
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- */
-app.get("/api/message", (req, res) => {
-  res.json({
-    message: `||| Hello from express |||`,
-  });
+
+app.get("/api/studentDashboardData",(req,res) =>{
+  return res.json({
+    totalCourses: 6,
+    assignments: 12,
+    upcomingEvents: 3,
+    attendanceData: [
+      { name: 'Present', value: 85 },
+      { name: 'Absent', value: 15 }
+    ],
+    gradesData: [
+      { name: 'A', value: 35 },
+      { name: 'B', value: 40 },
+      { name: 'C', value: 20 },
+      { name: 'D', value: 5 }
+    ]
+  })
 });
 
-/**
- * @swagger
- * /api/sendData:
- *   post:
- *     summary: Processes user role data
- *     tags: [General]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               data:
- *                 type: string
- *                 description: User role (Student, Teacher, Advisor)
- *     responses:
- *       200:
- *         description: Confirmation message based on user role
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 receivedData:
- *                   type: string
- */
+app.get("/api/teacherDashboardData",(req,res) =>{
+  return res.json({
+    totalStudents: 290,
+    performancePercentage: "85%",
+    completedLessons: 42,
+    classesData: [
+      { name: 'Math', value: 4 },
+      { name: 'Science', value: 3 },
+      { name: 'English', value: 2 },
+      { name: 'Other', value: 1 }
+    ],
+    studentsByYearData: [
+      { name: '1st Year', value: 120 },
+      { name: '2nd Year', value: 95 },
+      { name: '3rd Year', value: 75 }
+    ]
+  })
+});
+
+app.get("/api/advisorDashboardData",(req,res) =>{
+  return res.json({
+    totalStudents: 350,
+    totalClasses: 25,
+    totalPrograms: 8,
+    enrollmentData: [
+      { name: 'New Students', value: 75 },
+      { name: 'Returning', value: 225 },
+      { name: 'Potential Dropout', value: 50 }
+    ],
+    performanceData: [
+      { name: 'Excellent', value: 60 },
+      { name: 'Good', value: 120 },
+      { name: 'Average', value: 100 },
+      { name: 'Need Support', value: 20 }
+    ]
+  })
+});
+
 app.post("/api/sendData", (req, res) => {
   const { data } = req.body;
   console.log("Data received:", data);

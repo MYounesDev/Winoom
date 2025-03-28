@@ -521,8 +521,3 @@ const Teachers = () => {
 
 export default Teachers;
 
-//h1
-/*text-2xl font-bold text-gray-800 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent */
-
-//bt
-//bg-gradient-to-r from-indigo-640 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 focus:ring-4 focus:ring-indigo-200
