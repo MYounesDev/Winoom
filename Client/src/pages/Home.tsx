@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactElement } from 'react';
 import PageTemplate from "@/components/PageTemplate";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { 
@@ -12,7 +12,10 @@ import {
   Users, 
   BookmarkCheck,
   ActivityIcon,
-  AlertTriangle
+  AlertTriangle,
+  Sparkles,
+  Rocket,
+  Medal
 } from 'lucide-react';
 
 // Import API functions
@@ -59,7 +62,7 @@ const Home: React.FC = () => {
   >(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  
   // Retrieve role and fetch dashboard data
   useEffect(() => {
     const storedRole = sessionStorage.getItem('userRole') || 'Student';
@@ -119,7 +122,7 @@ const Home: React.FC = () => {
       </div>
       <div>
         <p className="text-gray-500 text-sm tracking-wider uppercase">{title}</p>
-        <h3 className="text-2xl font-bold text-gray-800 animate-text bg-gradient-to-r from-teal-500 to-purple-500 bg-clip-text text-transparent">
+        <h3 className="text-2xl font-bold text-gray-800 animate-text bg-gradient-to-r from-teal-500 to-purple-500 bg-clip-text">
           {value}
         </h3>
       </div>
@@ -131,7 +134,7 @@ const Home: React.FC = () => {
     title 
   }: { 
     data: { name: string; value: number }[], 
-    title: string 
+    title: ReactElement<any, any> | string
   }) => (
     <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
       <h3 className="text-xl font-semibold text-gray-800 mb-4 border-b pb-2 border-gray-200">
@@ -207,65 +210,191 @@ const Home: React.FC = () => {
     );
   }
 
-  // Student Dashboard
-  const StudentDashboard = () => {
-    const studentData = dashboardData as StudentDashboardData;
 
+  const StudentDashboard = () => {
+    const [isHovered, setIsHovered] = useState(false);
+    const [animateConfetti, setAnimateConfetti] = useState(false);
+    const studentData = dashboardData as StudentDashboardData;
+  
+    // Playful confetti animation trigger
+    const triggerConfetti = () => {
+      setAnimateConfetti(true);
+      setTimeout(() => setAnimateConfetti(false), 3000);
+    };
+  
     return (
-      <div className="space-y-8">
-        <div className="bg-[linear-gradient(to_right,var(--primary-color),var(--secondary-color))] rounded-2xl p-8 text-white shadow-lg">
+      <div className="space-y-8 relative overflow-hidden">
+        {/* Playful Confetti Animation */}
+        {animateConfetti && (
+          <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden">
+            {[...Array(50)].map((_, index) => (
+              <div 
+                key={index} 
+                className="absolute confetti-piece"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 3}s`,
+                  backgroundColor: [
+                    '#10b981', '#6366f1', '#f59e0b', 
+                    '#ec4899', '#14b8a6'
+                  ][Math.floor(Math.random() * 5)]
+                }}
+              />
+            ))}
+          </div>
+        )}
+  
+        {/* Hero Section with Enhanced Animation */}
+        <div 
+          className={`
+            bg-[linear-gradient(to_right,var(--primary-color),var(--secondary-color))] 
+            rounded-2xl p-8 text-white shadow-lg 
+            transition-all duration-500 
+            ${isHovered ? 'scale-[1.02] rotate-1 shadow-2xl' : ''}
+          `}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-extrabold mb-4 animate-bounce">
-                Welcome, Student! 🎉
+                Welcome, Student! 
+                <Sparkles 
+                  className="inline-block ml-3 text-yellow-300 animate-spin" 
+                  size={40} 
+                />
               </h1>
-              <p className="text-xl opacity-80">
-                Ready to explore and learn today?
+              <p className="text-xl opacity-80 flex items-center">
+                Ready to explore and learn today? 
+                <Rocket 
+                  className="ml-3 animate-[bounce_2s_infinite]" 
+                  size={30} 
+                />
               </p>
             </div>
-            <GraduationCap size={100} className="text-white/20" />
+            <GraduationCap 
+              size={100} 
+              className="text-white/20 animate-[wiggle_3s_infinite]" 
+            />
           </div>
         </div>
-
+  
+        {/* Dashboard Cards with Hover and Click Animations */}
         <div className="grid md:grid-cols-3 gap-6">
-          <DashboardCard 
-            icon={<BookOpen className="text-emerald-500" />} 
-            title="Total Courses" 
-            value={studentData.totalCourses} 
-            color="#10b981" 
-          />
-          <DashboardCard 
-            icon={<ClipboardList className="text-indigo-500" />} 
-            title="Assignments" 
-            value={studentData.assignments} 
-            color="#6366f1" 
-          />
-          <DashboardCard 
-            icon={<Calendar className="text-amber-500" />} 
-            title="Upcoming Events" 
-            value={studentData.upcomingEvents} 
-            color="#f59e0b" 
-          />
+          {[
+            { 
+              icon: <BookOpen className="text-emerald-500" />, 
+              title: "Total Courses", 
+              value: studentData.totalCourses, 
+              color: "#10b981",
+              onClick: triggerConfetti
+            },
+            { 
+              icon: <ClipboardList className="text-indigo-500" />, 
+              title: "Assignments", 
+              value: studentData.assignments, 
+              color: "#6366f1" 
+            },
+            { 
+              icon: <Calendar className="text-amber-500" />, 
+              title: "Upcoming Events", 
+              value: studentData.upcomingEvents, 
+              color: "#f59e0b",
+              badge: true
+            }
+          ].map((card, index) => (
+            <div 
+              key={card.title}
+              className={`
+                relative group cursor-pointer 
+                transition-all duration-300 
+                hover:scale-105 hover:rotate-3
+                ${card.badge ? 'badge-pulse' : ''}
+              `}
+              onClick={card.onClick}
+            >
+              <DashboardCard 
+                icon={card.icon}
+                title={card.title}
+                value={card.value}
+                color={card.color}
+              />
+              {card.badge && (
+                <div className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs animate-bounce">
+                  {card.value}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
-
+  
+        {/* Pie Charts with Enhanced Interactions */}
         <div className="grid md:grid-cols-2 gap-6">
-          <PieChartComponent 
-            data={studentData.attendanceData} 
-            title="Attendance Overview" 
-          />
-          <PieChartComponent 
-            data={studentData.gradesData} 
-            title="Grade Distribution" 
-          />
+          {[
+            { 
+              data: studentData.attendanceData, 
+              title: "Attendance Overview",
+              icon: <Medal className="inline-block ml-2 text-yellow-500" />
+            },
+            { 
+              data: studentData.gradesData, 
+              title: "Grade Distribution",
+              icon: <TrendingUp className="inline-block ml-2 text-green-500" />
+            }
+          ].map((chart) => (
+            <div 
+              className="group relative hover:scale-[1.02] transition-transform duration-300"
+              key={chart.title}
+            >
+              <PieChartComponent 
+                data={chart.data} 
+                title={
+                  <span>
+                    {chart.title}
+                    {chart.icon}
+                  </span>
+                } 
+              />
+              <div className="
+                absolute inset-0 
+                bg-gradient-to-r from-transparent to-blue-100/20 
+                opacity-0 group-hover:opacity-100 
+                transition-opacity duration-300 
+                pointer-events-none
+                rounded-2xl
+              "></div>
+            </div>
+          ))}
         </div>
-
+  
+        {/* Action Buttons with Playful Hover Effects */}
         <div className="flex space-x-4">
-          <button className="themed-button">
-            <BookOpen className="mr-2" /> View Courses
-          </button>
-          <button className="themed-button">
-            <Star className="mr-2" /> Track Progress
-          </button>
+          {[
+            { 
+              text: "View Courses", 
+              icon: <BookOpen className="mr-2" />,
+              className: "hover:bg-emerald-500 hover:text-white group"
+            },
+            { 
+              text: "Track Progress", 
+              icon: <Star className="mr-2" />,
+              className: "hover:bg-indigo-500 hover:text-white group"
+            }
+          ].map((button) => (
+            <button 
+              key={button.text}
+              className={`
+                themed-button 
+                transition-all duration-300 
+                ${button.className}
+              `}
+            >
+              {button.icon}
+              <span className="transition-transform group-hover:scale-110">
+                {button.text}
+              </span>
+            </button>
+          ))}
         </div>
       </div>
     );
