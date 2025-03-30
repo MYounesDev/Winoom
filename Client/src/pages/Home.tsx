@@ -2,16 +2,16 @@ import React, { useState, useEffect, ReactElement } from 'react';
 import PageTemplate from "@/components/PageTemplate";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { 
-  GraduationCap, 
-  BookOpen, 
-  ClipboardList, 
-  Calendar, 
-  TrendingUp, 
-  Star, 
-  School, 
+  GraduationCap,
+  BookOpen,
+  ClipboardList,
+  Calendar,
+  TrendingUp,
+  Star,
+  School,
   Users, 
   BookmarkCheck,
-  ActivityIcon,
+  LoaderPinwheel,
   AlertTriangle,
   Sparkles,
   Rocket,
@@ -189,7 +189,7 @@ const Home: React.FC = () => {
     return (
       <PageTemplate>
         <div className="flex justify-center items-center h-full space-x-4">
-          <ActivityIcon className="animate-spin text-primary-500" size={48} />
+          <LoaderPinwheel className="animate-spin text-primary-500" size={48} />
           <p className="text-2xl text-gray-600">Loading Dashboard...</p>
         </div>
       </PageTemplate>
@@ -212,14 +212,13 @@ const Home: React.FC = () => {
 
 
   const StudentDashboard = () => {
-    const [isHovered, setIsHovered] = useState(false);
     const [animateConfetti, setAnimateConfetti] = useState(false);
     const studentData = dashboardData as StudentDashboardData;
   
     // Playful confetti animation trigger
     const triggerConfetti = () => {
       setAnimateConfetti(true);
-      setTimeout(() => setAnimateConfetti(false), 3000);
+      setTimeout(() => setAnimateConfetti(false), 6000);
     };
   
     return (
@@ -250,10 +249,8 @@ const Home: React.FC = () => {
             bg-[linear-gradient(to_right,var(--primary-color),var(--secondary-color))] 
             rounded-2xl p-8 text-white shadow-lg 
             transition-all duration-500 
-            ${isHovered ? 'scale-[1.02] rotate-1 shadow-2xl' : ''}
           `}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+          onClick={triggerConfetti}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -287,20 +284,19 @@ const Home: React.FC = () => {
               title: "Total Courses", 
               value: studentData.totalCourses, 
               color: "#10b981",
-              onClick: triggerConfetti
             },
             { 
               icon: <ClipboardList className="text-indigo-500" />, 
               title: "Assignments", 
               value: studentData.assignments, 
-              color: "#6366f1" 
+              color: "#6366f1" ,
+              badge: true
             },
             { 
               icon: <Calendar className="text-amber-500" />, 
               title: "Upcoming Events", 
               value: studentData.upcomingEvents, 
               color: "#f59e0b",
-              badge: true
             }
           ].map((card, index) => (
             <div 
@@ -308,10 +304,9 @@ const Home: React.FC = () => {
               className={`
                 relative group cursor-pointer 
                 transition-all duration-300 
-                hover:scale-105 hover:rotate-3
-                ${card.badge ? 'badge-pulse' : ''}
+                hover:scale-105 hover:shadow-xl
               `}
-              onClick={card.onClick}
+              
             >
               <DashboardCard 
                 icon={card.icon}

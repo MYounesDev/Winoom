@@ -3,6 +3,7 @@ import PageTemplate from "@/components/PageTemplate";
 import { getStudents, postStudents } from "@/services/API";
 import * as XLSX from "xlsx";
 import { ArrowUpDown, X, UserPlus, FileSpreadsheet, Edit, Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface Student {
   ID: number;
@@ -55,11 +56,13 @@ const Students = () => {
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
         const response = await postStudents(jsonData);
+
         setStudents(response);
         setFilteredStudents(response);
+        toast.success("Students imported successfully.");
       } catch (err: any) {
         console.error("Failed to process Excel file: ", err);
-        setError("Failed to process Excel file: " + err.message);
+        toast.error("Failed to process Excel file. Please check the file format and try again.");
       } finally {
         setUploading(false);
       }

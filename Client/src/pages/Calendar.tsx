@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PageTemplate from "@/components/PageTemplate";
 import { getCalendar, postEvent } from "@/services/API";
 import { CalendarDays, MapPin, Clock, Plus, X } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface Event {
   title: string;
@@ -87,9 +88,11 @@ const Calendar = () => {
       // Reset form and close modal
       setNewEvent({ title: "", date: "", time: "", location: "" });
       setShowModal(false);
+      toast.success("Event added successfully!");
     } catch (err) {
       setFormError("Failed to add event. Please try again.");
       console.error("Error adding event:", err);
+      toast.error("Failed to add event. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -147,7 +150,7 @@ const Calendar = () => {
             </div>
           </div>
         ) : (
-          <div className="p-6 max-h-[450px] overflow-auto">
+          <div className="p-6 overflow-auto">
             {Object.entries(groupEventsByMonth()).map(
               ([month, monthEvents]) => (
                 <div key={month} className="mb-8">

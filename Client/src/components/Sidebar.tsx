@@ -16,6 +16,7 @@ import {
   SquareCheck,
 } from "lucide-react";
 import "@/styles/Sidebar.css";
+import toast from "react-hot-toast";
 
 // Define a type for the user role
 type UserRole = "Student" | "Teacher" | "Advisor" | null;
@@ -259,7 +260,18 @@ const Sidebar = ({ userRole: propUserRole }: SidebarProps) => {
           <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
             <div
               className="logo-container"
-              onClick={() => navigateTo("/home")}
+              onClick={() => {
+                if (window.location.pathname === "/home") {
+
+                  const emojis = ["👀", "😄", "🔥", "🎉", "👍", "🌟", "💪", "🙌", "🎈"];
+
+                  const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+
+                  toast(randomEmoji);
+                } else {
+                  navigateTo("/home");
+                }
+              }}
               ref={logoRef}
             >
               <div className="pulsing-light"></div>

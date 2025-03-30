@@ -1,6 +1,7 @@
 "use client"
 
 import StyledButtons from "@/app/StyledButtons";
+import { Toaster } from 'react-hot-toast';
 
 
 function App() {
@@ -8,9 +9,10 @@ function App() {
 
 
   return (
-    <div> 
+    <> 
+      <Toaster/>
       <StyledButtons/>
-    </div>
+    </>
   );
 }
 

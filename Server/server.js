@@ -525,6 +525,12 @@ app.get("/api/students", (req, res) => {
 });
 
 app.post("/api/students", (req, res) => {
+  if (req.body[0].ID === undefined || req.body[0].name === undefined || req.body[0].class === undefined || req.body[0].status === undefined){
+    console.log('Invalid request body');  // DEBUG
+    return res.status(400).json({ message: "Invalid request body" });
+  } 
+
+
   // TO DO: when add database send the req.body to database and send the update
   students = students.concat(req.body);
 
@@ -698,6 +704,10 @@ app.get("/api/teachers", (req, res) => {
 });
 
 app.post("/api/teachers", (req, res) => {
+  if (req.body[0].ID === undefined || req.body[0].name === undefined || req.body[0].classes === undefined || req.body[0].lessons === undefined || req.body[0].status === undefined){
+    console.log('Invalid request body');  // DEBUG
+    return res.status(400).json({ message: "Invalid request body" });
+  }
   // TO DO: when add database send the req.body to database and send the update
   teachers = teachers.concat(req.body);
 

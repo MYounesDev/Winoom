@@ -101,9 +101,7 @@
   75% { transform: rotate(5deg); }
 }
 
-.badge-pulse {
-  animation: pulse 2s infinite;
-}
+
 
 @keyframes pulse {
   0% { transform: scale(1); }
