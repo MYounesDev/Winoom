@@ -26,14 +26,17 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ userRole: propUserRole }: SidebarProps) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const storedIsOpen = sessionStorage.getItem("sidebarOpen");
+  const initialIsOpen = storedIsOpen !== null ? storedIsOpen === "true" : true;
+  
+  const [isOpen, setIsOpen] = useState(initialIsOpen);
   const [userRole, setUserRole] = useState<UserRole>(propUserRole || null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const logoRef = useRef<HTMLDivElement>(null);
   const eyeContainerRefs = useRef<Array<HTMLSpanElement | null>>([null, null]);
   const navigate = useNavigate();
-  const location = useLocation();
 
+  
   // Use effect to sync userRole from props or sessionStorage
   useEffect(() => {
     // First check props
@@ -65,8 +68,15 @@ const Sidebar = ({ userRole: propUserRole }: SidebarProps) => {
     };
   }, []);
 
+  useEffect(() => {
+    sessionStorage.setItem("sidebarOpen", isOpen.toString());
+  }, [isOpen]);
+
+  // Function to toggle the sidebar
   const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+    const newState = !isOpen;
+    setIsOpen(newState);
+    // sessionStorage update happens in the useEffect
   };
 
   const navigateTo = (path: string) => {

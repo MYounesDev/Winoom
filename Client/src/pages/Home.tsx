@@ -24,10 +24,11 @@ import {
   getTeacherDashboardData, 
   getAdvisorDashboardData 
 } from "@/services/API";
+import { To, useNavigate } from 'react-router-dom';
 
 // Dashboard data interfaces
 interface StudentDashboardData {
-  totalCourses: number;
+  totalLessons: number;
   assignments: number;
   upcomingEvents: number;
   attendanceData: { name: string; value: number }[];
@@ -210,15 +211,20 @@ const Home: React.FC = () => {
     );
   }
 
-
   const StudentDashboard = () => {
     const [animateConfetti, setAnimateConfetti] = useState(false);
     const studentData = dashboardData as StudentDashboardData;
+    const navigate = useNavigate(); // Assuming you're using React Router
   
     // Playful confetti animation trigger
     const triggerConfetti = () => {
       setAnimateConfetti(true);
       setTimeout(() => setAnimateConfetti(false), 6000);
+    };
+  
+    // Handle card click navigation
+    const handleCardClick = (destination: string) => {
+      navigate(destination);
     };
   
     return (
@@ -281,22 +287,25 @@ const Home: React.FC = () => {
           {[
             { 
               icon: <BookOpen className="text-emerald-500" />, 
-              title: "Total Courses", 
-              value: studentData.totalCourses, 
+              title: "Total Lessons", 
+              value: studentData.totalLessons, 
               color: "#10b981",
+              destination: "/lessons"
             },
             { 
               icon: <ClipboardList className="text-indigo-500" />, 
               title: "Assignments", 
               value: studentData.assignments, 
-              color: "#6366f1" ,
-              badge: true
+              color: "#6366f1",
+              badge: true,
+              destination: "/homework"  // This is the important change
             },
             { 
               icon: <Calendar className="text-amber-500" />, 
               title: "Upcoming Events", 
               value: studentData.upcomingEvents, 
               color: "#f59e0b",
+              destination: "/calendar"
             }
           ].map((card, index) => (
             <div 
@@ -306,7 +315,7 @@ const Home: React.FC = () => {
                 transition-all duration-300 
                 hover:scale-105 hover:shadow-xl
               `}
-              
+              onClick={() => handleCardClick(card.destination)}
             >
               <DashboardCard 
                 icon={card.icon}
@@ -394,7 +403,6 @@ const Home: React.FC = () => {
       </div>
     );
   };
-
   // Teacher Dashboard
   const TeacherDashboard = () => {
     const teacherData = dashboardData as TeacherDashboardData;

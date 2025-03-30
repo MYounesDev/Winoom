@@ -39,9 +39,9 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.get("/api/studentDashboardData",(req,res) =>{
   return res.json({
-    totalCourses: 6,
-    assignments: 12,
-    upcomingEvents: 3,
+    totalLessons: 6,
+    assignments: 3,
+    upcomingEvents: 5,
     attendanceData: [
       { name: 'Present', value: 85 },
       { name: 'Absent', value: 15 }
@@ -216,29 +216,110 @@ app.get("/api/getStudentClass", (req, res) => {
  *                       status:
  *                         type: string
  */
+
+
+let homeworkItems = [
+  {
+    id: "hw1",
+    title: "Sum of numbers from 1 to 100",
+    subject: "Math",
+    teacher: "Ms. Beyza Adanır",
+    dueDate: "2025-04-05",
+    description: "Complete problems 1-2 on page 45 of the textbook.",
+    status: "pending",
+    submittedCount: 15,
+    attachment: null,
+    submittedContent: null
+  },
+  {
+    id: "hw2",
+    title: "Lab Report: Sicence",
+    subject: "Science",
+    teacher: "Ms. Garcia",
+    dueDate: "2025-04-02",
+    description: "Mixing salt with lemon and take notes on the reactions observed",
+    status: "submitted",
+    submittedCount: 18,
+    attachment: "https://example.com/files/labattachment.pdf",
+    submittedContent: "When salt was added to the lemon, it caused fizzing and a noticeable change in the lemon's texture and flavor."
+  },
+  {
+    id: "hw3",
+    title: "Essay: The Industrial Revolution",
+    subject: "History",
+    teacher: "Mr. Thompson",
+    dueDate: "2025-04-10",
+    description: "Write a 1000-word essay on the causes and effects of the Industrial Revolution.",
+    status: "pending",
+    submittedCount: 10,
+    attachment: null,
+    submittedContent: null
+  }
+];
+
+// Endpoint to get homework assignments
 app.get("/api/homework", (req, res) => {
-  const pendingAssignments = [
-    { 
-      name: "Mathematics Assignment #3", 
-      dueDate: "March 20, 2025", 
-      status: "pending" 
-    },
-    { 
-      name: "Science Lab Report", 
-      dueDate: "March 22, 2025", 
-      status: "pending" 
-    }
-  ];
-  
-  const completedAssignments = [
-    { 
-      name: "Mathematics Assignment #2", 
-      status: "submitted" 
-    }
-  ];
-  
-  res.json({ pendingAssignments, completedAssignments });
+  res.json({ homeworkItems });
 });
+
+// Endpoint to submit homework
+app.post("/api/submitHomework", (req, res) => {
+  const { homeworkId, content } = req.body;
+  
+  // Find the homework item and update it
+  const homeworkIndex = homeworkItems.findIndex(item => item.id === homeworkId);
+  
+  if (homeworkIndex !== -1) {
+    homeworkItems[homeworkIndex].status = "submitted";
+    homeworkItems[homeworkIndex].submittedContent = content;
+    homeworkItems[homeworkIndex].submittedCount += 1;
+    
+    // If there's an attachment, simulate storing it
+    if (req.body.attachment) {
+      homeworkItems[homeworkIndex].attachment = "https://example.com/files/newattachment.pdf";
+    }
+  }
+  
+  // Return updated homework list
+  res.json({ homeworkItems });
+});
+
+// Endpoint to edit submitted homework
+app.post("/api/editHomework", (req, res) => {
+  const { homeworkId, content } = req.body;
+  
+  // Find the homework item and update it
+  const homeworkIndex = homeworkItems.findIndex(item => item.id === homeworkId);
+  
+  if (homeworkIndex !== -1 && homeworkItems[homeworkIndex].status === "submitted") {
+    homeworkItems[homeworkIndex].submittedContent = content;
+    
+    // If there's a new attachment, simulate updating it
+    if (req.body.attachment) {
+      homeworkItems[homeworkIndex].attachment = "https://example.com/files/updatedattachment.pdf";
+    }
+  }
+  
+  // Return updated homework list
+  res.json({ homeworkItems });
+});
+
+// Endpoint to ask a question about homework
+app.post("/api/askQuestionAboutHomework", (req, res) => {
+  const { homeworkId, question } = req.body;
+  
+  // In a real application, this would store the question and notify the teacher
+  // For this mock API, we'll just acknowledge receipt
+  
+  console.log(`Question received for homework ${homeworkId}: ${question}`);
+  
+  // Return success response
+  res.json({ 
+    success: true, 
+    message: "Your question has been sent to the teacher."
+  });
+});
+
 
 /**
  * @swagger
@@ -402,22 +483,34 @@ let events;
 app.get("/api/calendar", (req, res) => {
   events = [
     {
-      title:"23 Nisan Etkinlik",
-      date:"2025-04-23",
-      time:"9:00 AM",
-      location:"School Yard"
+      title: "23 April (Kid Day) Event",
+      date: "2025-04-23",
+      time: "9:00 AM",
+      location: "School Yard"
     },
     {
-      title:"18 mart tiyatro",
-      date:"2025-03-18",
-      time:"2:00 PM",
-      location:"School Conference"
+      title: "18 March Theater",
+      date: "2025-03-18",
+      time: "2:00 PM",
+      location: "School Conference"
     },
     {
-      title:"Math Test 3/A",
-      date:"2025-03-28",
-      time:"11:00 AM",
-      location:"3/A"
+      title: "Math Test 3/A",
+      date: "2025-03-28",
+      time: "10:00 AM",
+      location: "3/A"
+    },
+    {
+      title: "Graduation Ceremony",
+      date: "2025-06-16",
+      time: "11:00 AM",
+      location: "School"
+    },
+    {
+      title: "Science Fair",
+      date: "2025-05-15",
+      time: "10:00 AM",
+      location: "Laboratory"
     }
   ];
 

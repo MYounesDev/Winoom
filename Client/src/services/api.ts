@@ -79,7 +79,17 @@ export const getAdvisorDashboardData = async () => {
 
 
 
+export const submitHomework = async (submitData: any) => {
+  return postData('submitHomework', submitData);
+};
 
+export const editHomework = async (editData: any) => {
+  return postData('editHomework', editData);
+};
+
+export const askQuestionAboutHomework = async (questionData: any) => {
+  return postData('askQuestionAboutHomework', questionData);
+};
 
 
 
