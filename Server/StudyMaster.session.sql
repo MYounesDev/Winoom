@@ -1,1 +1,0 @@
--- SELECT id, name, phone, mail FROM students
