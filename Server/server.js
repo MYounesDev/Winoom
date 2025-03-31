@@ -100,7 +100,7 @@ app.get("/api/announcements", (req, res) => {
       title: "The Mayor Visited Our School",
       description: "We were honored to welcome Mayor Johnson for a special assembly where students presented their community improvement projects. The mayor was particularly impressed with the environmental initiatives and pledged support for the student-led recycling program.",
       publishDate: "2025-03-25T10:30:00Z",
-      imageUrl: "/api/placeholder/400/300",  // Placeholder for an actual image URL
+      imageUrl: "https://www.st-vincents.rochdale.sch.uk/wp-content/uploads/2024/05/IMG_2931.jpg",  // Placeholder for an actual image URL
       author: "Principal Williams"
     },
     {
@@ -108,7 +108,7 @@ app.get("/api/announcements", (req, res) => {
       title: "School Trip on April 15th",
       description: "The annual science museum field trip is scheduled for April 15th. Permission slips are due by April 5th. This year's focus will be on the new interactive exhibit 'Future Technologies'. Students should bring lunch and wear school uniforms.",
       publishDate: "2025-03-10T09:15:00Z",
-      imageUrl: "/api/placeholder/400/300",
+      imageUrl: "http://blog.sciencemuseum.org.uk/wp-content/uploads/2014/05/SCIENCE-DINNER-531.jpg",
       author: "Ms. Garcia, Science Department"
     },
     {
@@ -123,7 +123,7 @@ app.get("/api/announcements", (req, res) => {
       title: "Spring Concert Next Weekend",
       description: "Don't miss our talented music students at the annual Spring Concert on Saturday, April 5th at 7 PM in the main auditorium. Tickets are available through the school office or online through the school website.",
       publishDate: "2025-03-28T13:20:00Z",
-      imageUrl: "/api/placeholder/400/300",
+      imageUrl: "https://i.ytimg.com/vi/CmDS7C6kHHo/maxresdefault.jpg",
       author: "Music Department"
     },
     {
@@ -138,7 +138,7 @@ app.get("/api/announcements", (req, res) => {
       title: "Parent-Teacher Conferences",
       description: "Parent-Teacher conferences will be held on April 8th and 9th from 4-8 PM. Please use the online scheduling system to book your appointments with teachers by April 3rd.",
       publishDate: "2025-03-18T10:00:00Z",
-      imageUrl: "/api/placeholder/400/300",
+      imageUrl: "https://www.teachhub.com/wp-content/uploads/2020/06/How-to-prepare-for-Parent-Teacher-Conferences_final.jpg",
       author: "Administration Office"
     }
   ];

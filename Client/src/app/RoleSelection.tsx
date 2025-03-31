@@ -6,8 +6,6 @@ import {
   Baby,
   UserRound,
   LineChart,
-  ChevronLeft,
-  ChevronRight,
   Calendar,
 } from "lucide-react";
 import { getAnnouncements, getSchoolImages } from "@/services/API";
@@ -80,17 +78,7 @@ const RoleSelectionUI = () => {
     fetchAnnouncements();
   }, []);
 
-  const handlePrevImage = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? schoolImages.length - 1 : prevIndex - 1
-    );
-  };
 
-  const handleNextImage = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === schoolImages.length - 1 ? 0 : prevIndex + 1
-    );
-  };
 
   const handleRoleSelect = async (role: string) => {
     try {
@@ -341,6 +329,9 @@ const RoleSelectionUI = () => {
           </div>
         )}
 
+
+
+
         {/* Announcements Section */}
         <div className="bg-white bg-opacity-90 backdrop-filter backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-12">
           <div className="flex items-center justify-between mb-6">
@@ -391,67 +382,7 @@ const RoleSelectionUI = () => {
                 </div>
               ))}
 
-              {/* Fallback UI in case API is not ready during development */}
-              {announcements.length === 0 && (
-                <>
-                  <div className="bg-slate-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex items-start gap-4">
-                      <div className="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
-                        <img
-                          src="/api/placeholder/200/200"
-                          alt="Mayor Visit"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-sm text-slate-500 mb-1">
-                          March 25, 2025
-                        </div>
-                        <h4 className="text-lg font-semibold text-slate-800 mb-2">
-                          The Mayor Visited Our School
-                        </h4>
-                        <p className="text-slate-600 text-sm line-clamp-3">
-                          We were honored to welcome Mayor Johnson for a special
-                          assembly where students presented their community
-                          improvement projects.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
 
-                  <div className="bg-slate-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex-1">
-                      <div className="text-sm text-slate-500 mb-1">
-                        March 10, 2025
-                      </div>
-                      <h4 className="text-lg font-semibold text-slate-800 mb-2">
-                        School Trip on April 15th
-                      </h4>
-                      <p className="text-slate-600 text-sm">
-                        The annual science museum field trip is scheduled for
-                        April 15th. Permission slips due by April 5th. Contact
-                        your homeroom teacher for details.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex-1">
-                      <div className="text-sm text-slate-500 mb-1">
-                        March 5, 2025
-                      </div>
-                      <h4 className="text-lg font-semibold text-slate-800 mb-2">
-                        Exam Program Announced
-                      </h4>
-                      <p className="text-slate-600 text-sm">
-                        Final examination schedules have been posted. Please
-                        check the student portal for your personalized exam
-                        timetable and preparation resources.
-                      </p>
-                    </div>
-                  </div>
-                </>
-              )}
             </div>
           )}
         </div>

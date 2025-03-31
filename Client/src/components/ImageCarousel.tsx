@@ -69,7 +69,7 @@ const ImageCarousel = ({ schoolImages }: { schoolImages: Image[] }) => {
       {/* Navigation Arrows */}
       <div className="absolute inset-0 flex items-center justify-between p-4">
         <motion.button
-          className="w-10 h-10 rounded-full bg-white bg-opacity-30 text-white flex items-center justify-center backdrop-blur-sm hover:bg-opacity-50 transition-all"
+          className="w-10 h-10 rounded-full bg-opacity-30 text-white flex items-center justify-center backdrop-blur-sm hover:bg-opacity-50 transition-all"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={handlePrevImage}
@@ -78,7 +78,7 @@ const ImageCarousel = ({ schoolImages }: { schoolImages: Image[] }) => {
         </motion.button>
 
         <motion.button
-          className="w-10 h-10 rounded-full bg-white bg-opacity-30 text-white flex items-center justify-center backdrop-blur-sm hover:bg-opacity-50 transition-all"
+          className="w-10 h-10 rounded-full bg-opacity-30 text-white flex items-center justify-center backdrop-blur-sm hover:bg-opacity-50 transition-all"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={handleNextImage}
