@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "react-hot-toast";
+import ImageCarousel from "@/components/ImageCarousel";
 import {
   Baby,
   UserRound,
@@ -251,57 +252,6 @@ const RoleSelectionUI = () => {
           </p>
         </div>
 
-        {/* School Image Carousel */}
-        {schoolImages.length > 0 ? (
-          <div className="bg-white bg-opacity-90 backdrop-filter backdrop-blur-lg rounded-2xl shadow-xl mb-12 overflow-hidden relative">
-            <div className="relative aspect-w-16 aspect-h-7 h-96">
-              <img
-                src={schoolImages[currentImageIndex].url}
-                alt={schoolImages[currentImageIndex].alt}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-4">
-                <p className="text-xl font-semibold">
-                  {schoolImages[currentImageIndex].caption}
-                </p>
-              </div>
-            </div>
-
-            {/* Navigation arrows */}
-            <button
-              onClick={handlePrevImage}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all"
-            >
-              <ChevronLeft size={24} />
-            </button>
-            <button
-              onClick={handleNextImage}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all"
-            >
-              <ChevronRight size={24} />
-            </button>
-
-            {/* Indicator dots */}
-            <div className="flex justify-center gap-2 p-3">
-              {schoolImages.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentImageIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-all ${
-                    index === currentImageIndex
-                      ? "bg-slate-800 scale-110"
-                      : "bg-slate-300 hover:bg-slate-400"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="relative aspect-w-16 aspect-h-7 h-96 bg-slate-200 flex items-center justify-center">
-            <p className="text-slate-500">Loading images...</p>
-          </div>
-        )}
-
         {/* Role Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
           {roleData.map((role) => (
@@ -379,6 +329,17 @@ const RoleSelectionUI = () => {
             </div>
           ))}
         </div>
+
+        {/* School Image Carousel */}
+        {schoolImages.length > 0 ? (
+          <ImageCarousel schoolImages={schoolImages} />
+        ) : (
+          <div className="relative w-full h-[32rem] max-w-4xl mx-auto bg-gray-100 rounded-3xl flex items-center justify-center overflow-hidden">
+            <p className="text-gray-500 text-lg font-medium animate-pulse">
+              Loading images...
+            </p>
+          </div>
+        )}
 
         {/* Announcements Section */}
         <div className="bg-white bg-opacity-90 backdrop-filter backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-12">
