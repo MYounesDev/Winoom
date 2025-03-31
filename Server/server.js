@@ -93,31 +93,99 @@ app.get("/api/advisorDashboardData",(req,res) =>{
   })
 });
 
-app.post("/api/sendData", (req, res) => {
-  const { data } = req.body;
-  console.log("Data received:", data);
+app.get("/api/announcements", (req, res) => {
+  const announcements = [
+    {
+      id: 1,
+      title: "The Mayor Visited Our School",
+      description: "We were honored to welcome Mayor Johnson for a special assembly where students presented their community improvement projects. The mayor was particularly impressed with the environmental initiatives and pledged support for the student-led recycling program.",
+      publishDate: "2025-03-25T10:30:00Z",
+      imageUrl: "/api/placeholder/400/300",  // Placeholder for an actual image URL
+      author: "Principal Williams"
+    },
+    {
+      id: 2,
+      title: "School Trip on April 15th",
+      description: "The annual science museum field trip is scheduled for April 15th. Permission slips are due by April 5th. This year's focus will be on the new interactive exhibit 'Future Technologies'. Students should bring lunch and wear school uniforms.",
+      publishDate: "2025-03-10T09:15:00Z",
+      imageUrl: "/api/placeholder/400/300",
+      author: "Ms. Garcia, Science Department"
+    },
+    {
+      id: 3,
+      title: "Exam Program Announced",
+      description: "Final examination schedules have been posted. Please check the student portal for your personalized exam timetable and preparation resources. Study sessions will be available in the library every afternoon starting next week.",
+      publishDate: "2025-03-05T14:45:00Z",
+      author: "Academic Office"
+    },
+    {
+      id: 4,
+      title: "Spring Concert Next Weekend",
+      description: "Don't miss our talented music students at the annual Spring Concert on Saturday, April 5th at 7 PM in the main auditorium. Tickets are available through the school office or online through the school website.",
+      publishDate: "2025-03-28T13:20:00Z",
+      imageUrl: "/api/placeholder/400/300",
+      author: "Music Department"
+    },
+    {
+      id: 5,
+      title: "New Sports Equipment Arrived",
+      description: "We're excited to announce that our athletic department has received new equipment for basketball, volleyball, and soccer. Students can access these during PE classes and after-school programs starting next Monday.",
+      publishDate: "2025-03-22T11:00:00Z",
+      author: "Coach Patel"
+    },
+    {
+      id: 6,
+      title: "Parent-Teacher Conferences",
+      description: "Parent-Teacher conferences will be held on April 8th and 9th from 4-8 PM. Please use the online scheduling system to book your appointments with teachers by April 3rd.",
+      publishDate: "2025-03-18T10:00:00Z",
+      imageUrl: "/api/placeholder/400/300",
+      author: "Administration Office"
+    }
+  ];
 
-  let responseMessage = "";
-  
-  switch (data) {
-    case "Student":
-      responseMessage = "Student dashboard loaded successfully!";
-      break;
-    case "Teacher":
-      responseMessage = "Teacher dashboard loaded successfully!";
-      break;
-    case "Advisor":
-      responseMessage = "Advisor dashboard loaded successfully!";
-      break;
-    default:
-      responseMessage = "Data received successfully!";
-  }
 
-  res.json({
-    message: responseMessage,
-    receivedData: data,
-  });
+  res.json({ announcements });
 });
+
+
+app.get("/api/schoolImages", (req, res) => {
+  const images = [
+    {
+      url: "https://images.adsttc.com/media/images/5b6d/d3c6/f197/cc4b/6200/0245/large_jpg/01_170927630.jpg?1533924277",
+      alt: "School campus main building",
+      caption: "Our modern campus facilities"
+    },
+    {
+      url: "https://www.the74million.org/wp-content/uploads/2022/09/kids_science_class.jpg",
+      alt: "Students in science lab",
+      caption: "State-of-the-art science laboratories"
+    },
+    {
+      url: "https://www.promoteyourschool.co.uk/wp-content/uploads/2021/03/Wellington-school-library-wall-art-7.webp",
+      alt: "School library",
+      caption: "Extensive library with digital resources"
+    },
+    {
+      url: "https://ambienceschool.com/wp-content/uploads/2022/03/track-field-1024x622-2.jpg",
+      alt: "Sports field",
+      caption: "Sports facilities for physical education"
+    },
+    {
+      url: "https://www.pasadenachristian.org/editoruploads/images/Thanksgiving_Plate.jpg",
+      alt: "Art studio",
+      caption: "Creative arts and multimedia studios"
+    },
+    {
+      url: "https://www.cato.org/sites/cato.org/files/styles/aside_3x/public/2025-03/GettyImages-1191725300.jpg?itok=kXYunO_g",
+      alt: "School cafeteria",
+      caption: "Healthy and diverse meal options"
+    }
+  ];
+  
+  res.json({ images });
+});
+
+
 
 /**
  * @swagger

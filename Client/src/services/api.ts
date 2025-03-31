@@ -24,10 +24,27 @@ export const postData = async (endpoint:string, data = {}) => {
   }
 };
 
+
+
+
+
 // Fetch functions
+export const getAnnouncements = async () => {
+  return fetchData("announcements");
+}
+
+
+export const getSchoolImages = async () => {
+  return fetchData("schoolImages");
+}
+
+
+
+//pages data
 export const getClasses = async () => {
   return fetchData('getClasses');
 };
+
 
 export const getStudentClass = async () => {
   return fetchData('getStudentClass');
@@ -65,6 +82,9 @@ export const getReports = async () => {
   return fetchData('reports');
 };
 
+
+
+
 export const getStudentDashboardData = async () => {
   return fetchData("studentDashboardData");
 }
@@ -76,6 +96,11 @@ export const getTeacherDashboardData = async () => {
 export const getAdvisorDashboardData = async () => {
   return fetchData("advisorDashboardData");
 }
+
+
+
+
+
 
 
 
