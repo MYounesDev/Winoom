@@ -27,6 +27,9 @@ const App = () => {
         <Toaster position="top-right" />
 
         <Routes>
+          <Route path="/" element={<RoleSelectionUI />} />
+
+
           {/* Generel routes */}
           <Route path="/home" element={<Home />} />
           <Route path="/settings" element={<Settings />} />
@@ -45,16 +48,7 @@ const App = () => {
           <Route path="/reports" element={<Reports />} />
           <Route path="/teachers" element={<Teachers />} />
         </Routes>
-
-
-
-
-
-
-
-
         {/* Render the RoleSelectionUI outside of Routes */}
-        <RoleSelectionUI />
       </Router>
     </>
   );
